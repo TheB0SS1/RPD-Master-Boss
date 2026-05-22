@@ -3,199 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPD MasterBoss - Professional Quiz</title>
+    <title>RPD MasterBoss - The Ultimate Edition</title>
     <style>
         :root {
             --primary-orange: #ff6600;
-            --primary-orange-hover: #e65c00;
-            --bg-gray: #f4f6f8;
-            --card-white: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --success-green: #28a745;
-            --error-red: #dc3545;
-            --border-radius: 12px;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --primary-dark: #cc5200;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #2d3436;
+            --text-sec: #636e72;
+            --success: #00b894;
+            --error: #d63031;
+            --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 40px -10px rgba(255, 102, 0, 0.2);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Poppins', sans-serif; }
 
         body {
-            background-color: var(--bg-gray);
-            color: var(--text-dark);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: var(--text-main);
         }
 
-        /* Header */
+        /* --- HEADER & LOGO (BOSS STYLE) --- */
         header {
-            background: var(--card-white);
-            padding: 1rem 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-light);
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-dark);
+            font-size: 1.8rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            background: linear-gradient(45deg, #2d3436 0%, #ff6600 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 4px 6px rgba(255, 102, 0, 0.3));
+            letter-spacing: -1px;
+            line-height: 1;
         }
 
-        .logo span {
-            color: var(--primary-orange);
+        .logo-sub {
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
         }
 
-        /* Main Container */
+        /* --- MAIN LAYOUT --- */
         main {
             flex: 1;
-            padding: 1.5rem;
-            max-width: 800px;
+            padding: 3rem 1.5rem;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
+            min-height: 60vh;
         }
 
-        /* Views */
-        .view {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .view.active {
-            display: block;
-        }
+        /* --- VIEWS --- */
+        .view { display: none; animation: fadeIn 0.6s ease; }
+        .view.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Home Screen (Chapter Selection) */
+        /* --- CHAPTER GRID (HOME) --- */
         .chapter-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .chapter-card {
-            background: var(--card-white);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-light);
             cursor: pointer;
-            transition: var(--transition);
-            border-left: 5px solid transparent;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.8);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 260px;
         }
 
         .chapter-card:hover {
-            transform: translateY(-5px);
-            border-left-color: var(--primary-orange);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-bottom: 5px solid var(--primary-orange);
         }
 
-        .chapter-card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .chapter-card p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-
-        .progress-bar-container {
-            height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: auto;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--primary-orange);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .status-badge {
+        .bg-number {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            background: #eee;
-            color: #666;
-            font-weight: 600;
+            top: -30px;
+            right: -20px;
+            font-size: 9rem;
+            font-weight: 900;
+            color: rgba(0,0,0,0.02);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
         }
 
-        .status-badge.completed {
-            background: var(--success-green);
-            color: white;
+        .card-content { position: relative; z-index: 1; }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
         }
 
-        /* Quiz Screen */
+        .chapter-desc {
+            color: var(--text-sec);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .stats-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--primary-orange);
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        /* --- QUIZ VIEW --- */
         .quiz-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-light);
         }
 
         .progress-text {
-            font-weight: 600;
+            font-weight: 900;
+            font-size: 1.3rem;
             color: var(--primary-orange);
         }
 
-        .question-card {
-            background: var(--card-white);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
+        .question-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 2rem;
+            position: relative;
         }
 
         .question-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #333;
         }
 
         .option-btn {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
             background: #fff;
-            border: 2px solid #e0e0e0;
-            padding: 1rem 1.25rem;
-            border-radius: 8px;
-            text-align: left;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: var(--transition);
-            color: var(--text-dark);
-            position: relative;
+            text-align: left;
+            transition: all 0.2s;
+            font-weight: 600;
+            color: #555;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -204,240 +213,135 @@
         .option-btn:hover:not(:disabled) {
             border-color: var(--primary-orange);
             background: #fff8f2;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1);
         }
 
-        .option-btn.correct {
-            border-color: var(--success-green);
-            background: #d4edda;
-            color: #155724;
-        }
+        .option-btn.correct { background: #00b894; border-color: #00b894; color: white; }
+        .option-btn.wrong { background: #d63031; border-color: #d63031; color: white; animation: shake 0.3s; }
 
-        .option-btn.wrong {
-            border-color: var(--error-red);
-            background: #f8d7da;
-            color: #721c24;
-            animation: shake 0.4s ease-in-out;
-        }
+        @keyframes shake { 0%, 100% {transform:translateX(0);} 25% {transform:translateX(-5px);} 75% {transform:translateX(5px);} }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
+        .option-btn:disabled { cursor: default; opacity: 0.9; }
 
-        .option-btn:disabled {
-            cursor: default;
-            opacity: 0.9;
-        }
-
-        .feedback-area {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .feedback-area.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .feedback-area.correct-fb {
-            background-color: #e8f5e9;
-            border-left: 4px solid var(--success-green);
-        }
-
-        .feedback-area.wrong-fb {
-            background-color: #fdecea;
-            border-left: 4px solid var(--error-red);
-        }
-
-        .feedback-title {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .explanation-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #444;
-        }
-
-        /* Next Button */
-        .next-btn-container {
-            text-align: center;
+        .feedback {
             margin-top: 2rem;
-            height: 60px; /* Placeholder space */
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: none;
+            animation: slideDown 0.4s;
         }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e6fffa; border-left: 6px solid #00b894; }
+        .feedback.wrong { background: #fff5f5; border-left: 6px solid #d63031; }
 
         .next-btn {
-            background: var(--primary-orange);
-            color: white;
-            border: none;
-            padding: 0.8rem 3rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
-            transition: var(--transition);
-            display: none; /* Hidden until answered */
+            background: linear-gradient(45deg, #ff6600, #ff9f43);
+            color: white; border: none; padding: 1rem 4rem; border-radius: 50px;
+            font-size: 1.2rem; font-weight: 800; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 102, 0, 0.3);
+            margin-top: 2rem; display: none; transition: all 0.3s;
         }
+        .next-btn:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(255, 102, 0, 0.4); }
 
-        .next-btn:hover {
-            background: var(--primary-orange-hover);
-            transform: scale(1.05);
-        }
-
-        /* Results Screen */
+        /* --- RESULT VIEW --- */
         .result-card {
-            background: var(--card-white);
-            text-align: center;
-            padding: 3rem 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            background: white; text-align: center; padding: 4rem 2rem;
+            border-radius: 30px; box-shadow: var(--shadow-light); max-width: 600px; margin: 0 auto;
         }
-
         .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
+            width: 200px; height: 200px; border-radius: 50%;
             background: conic-gradient(var(--primary-orange) 0%, #eee 0%);
-            margin: 0 auto 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0 auto 2.5rem; display: flex; align-items: center; justify-content: center;
             position: relative;
         }
+        .score-inner { width: 180px; height: 180px; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-number { font-size: 3rem; font-weight: 900; color: var(--primary-orange); line-height: 1; }
+        .score-label { font-size: 1rem; color: var(--text-sec); font-weight: 600; margin-top: 5px; text-transform: uppercase; }
 
-        .score-inner {
-            width: 130px;
-            height: 130px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .score-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-orange);
-        }
-
-        .score-label {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .result-msg {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            font-weight: 700;
-        }
+        .result-msg { font-size: 2rem; margin-bottom: 1rem; font-weight: 800; }
+        .result-details { font-size: 1.2rem; color: var(--text-sec); margin-bottom: 3rem; }
 
         .action-btn {
-            background: var(--text-dark);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin: 0.5rem;
-            transition: var(--transition);
+            background: var(--text-main); color: white; border: none;
+            padding: 1.2rem 3rem; border-radius: 50px; font-size: 1.1rem;
+            font-weight: 700; cursor: pointer; margin: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: all 0.3s;
         }
+        .action-btn:hover { transform: translateY(-3px); background: var(--primary-orange); }
+        .action-btn.secondary { background: transparent; border: 2px solid var(--text-main); color: var(--text-main); box-shadow: none; }
 
-        .action-btn:hover {
-            background: #000;
-            transform: translateY(-2px);
+        /* --- ARABIC MODAL --- */
+        #introModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: 0.5s;
         }
-
-        .action-btn.secondary {
-            background: transparent;
-            border: 2px solid var(--text-dark);
-            color: var(--text-dark);
+        #introModal.show { opacity: 1; pointer-events: all; }
+        .modal-box {
+            background: white; padding: 4rem; border-radius: 30px; max-width: 500px;
+            text-align: center; border-top: 8px solid var(--primary-orange);
+            transform: scale(0.8); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
+        #introModal.show .modal-box { transform: scale(1); }
+        .arabic-text { direction: rtl; font-size: 1.3rem; line-height: 2; margin: 2rem 0; color: #444; font-weight: 700; }
+        .modal-title { direction: rtl; font-size: 2rem; font-weight: 900; margin-bottom: 1rem; color: var(--text-main); }
+        .modal-btn { background: var(--primary-orange); color: white; border: none; padding: 1rem 4rem; border-radius: 50px; font-size: 1.3rem; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .modal-btn:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(255, 102, 0, 0.4); }
+        .prayer-text { direction: rtl; color: var(--primary-dark); font-style: italic; font-weight: 800; font-size: 1.1rem; margin-top: 2rem; }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            border-top: 1px solid #e0e0e0;
-            margin-top: auto;
-        }
-
-        footer strong {
-            color: var(--primary-orange);
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .question-card {
-                padding: 1.5rem;
-            }
-            .question-text {
-                font-size: 1.1rem;
-            }
-            .option-btn {
-                font-size: 0.95rem;
-                padding: 0.9rem;
-            }
-            .chapter-grid {
-                grid-template-columns: 1fr;
-            }
+        footer { text-align: center; padding: 2rem; color: var(--text-sec); font-size: 0.9rem; border-top: 1px solid #eee; margin-top: auto; background: white; }
+        footer strong { color: var(--primary-orange); }
+        
+        /* Mobile Adjustments */
+        @media(max-width: 600px) {
+            .logo { font-size: 1.4rem; }
+            .question-box { padding: 1.5rem; }
+            .modal-box { padding: 2rem; margin: 1rem; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">RPD <span>MasterBoss</span></div>
-        <button id="homeBtn" class="action-btn secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; display: none;">Home</button>
+        <div class="logo-container">
+            <div class="logo">RPD MASTERBOSS</div>
+            <div class="logo-sub">PRO TRAINING</div>
+        </div>
+        <button id="exitBtn" style="display:none; padding: 0.5rem 1.5rem; background: #eee; border: none; border-radius: 20px; cursor: pointer; font-weight: 700; transition: 0.2s;">EXIT</button>
     </header>
 
     <main id="app">
-        <!-- Home Screen -->
+        <!-- HOME VIEW (CHAPTERS) -->
         <div id="homeView" class="view active">
-            <h2>Select a Chapter</h2>
-            <p style="color: #666; margin-bottom: 1rem;">Professional RPD Training. Progress is saved automatically.</p>
-            <div class="chapter-grid" id="chapterList">
-                <!-- Chapters injected by JS -->
+            <div class="chapter-grid" id="chapterGrid">
+                <!-- JS Will Inject Cards Here -->
             </div>
         </div>
 
-        <!-- Quiz Screen -->
+        <!-- QUIZ VIEW -->
         <div id="quizView" class="view">
             <div class="quiz-header">
-                <button class="action-btn secondary" onclick="app.goHome()" style="margin:0; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Exit</button>
+                <button class="action-btn secondary" onclick="app.goHome()" style="padding: 0.4rem 1rem; font-size: 0.8rem; margin:0; display:block;">Exit</button>
                 <div class="progress-text" id="progressTracker">Question 1/30</div>
             </div>
-
-            <div class="question-card">
-                <div class="question-text" id="questionText">Loading...</div>
-                <div class="options-list" id="optionsList">
-                    <!-- Options injected by JS -->
-                </div>
-                
-                <div class="feedback-area" id="feedbackArea">
-                    <div class="feedback-title" id="feedbackTitle"></div>
-                    <div class="explanation-text" id="explanationText"></div>
+            <div class="question-box">
+                <div class="question-text" id="qText">Loading...</div>
+                <div id="optionsArea"></div>
+                <div class="feedback" id="feedbackBox">
+                    <h4 id="feedbackTitle" style="font-size:1.2rem; margin-bottom:0.5rem;"></h4>
+                    <p id="feedbackText" style="font-size:1rem; line-height:1.6;"></p>
                 </div>
             </div>
-
-            <div class="next-btn-container">
+            <div style="text-align: center;">
                 <button class="next-btn" id="nextBtn">Next Question</button>
             </div>
         </div>
 
-        <!-- Result Screen -->
+        <!-- RESULT VIEW -->
         <div id="resultView" class="view">
             <div class="result-card">
                 <div class="score-circle" id="scoreCircle">
@@ -447,23 +351,40 @@
                     </div>
                 </div>
                 <h2 class="result-msg" id="resultMessage">Great Job!</h2>
-                <p style="margin-bottom: 2rem; color: #666;" id="resultDetails">You answered X out of Y correctly.</p>
-                
+                <p class="result-details" id="resultDetails"></p>
                 <button class="action-btn" onclick="app.retryChapter()">Retake Chapter</button>
                 <button class="action-btn secondary" onclick="app.goHome()">Back to Chapters</button>
             </div>
         </div>
     </main>
 
+    <!-- ARABIC INTRO MODAL -->
+    <div id="introModal">
+        <div class="modal-box">
+            <h3 class="modal-title">🕶️ يا هلا بـ The Boss!</h3>
+            <p class="arabic-text">
+                "اسمع يا بطل، المهارات الخارقة ما بتتحققش من فراغ... هيحصلوا هنا يا ريس!<br>
+                الموقع جاهز بالكامل والأسئلة مظبوطة.<br>
+                خلينا نكسر الأسئلة دي بأسلوب المحترفين الحقيقيين وتحقق الهيمنة!" 
+            </p>
+            <button class="modal-btn" onclick="document.getElementById('introModal').classList.remove('show')">هيا بنا!</button>
+            <p class="prayer-text">اللهم بارك ووفق زياد دائماً في كل شؤونه</p>
+        </div>
+    </div>
+
     <footer>
-        This website was designed by <strong>The Boss</strong>
+        Designed with precision by <strong>The Boss</strong>
     </footer>
 
     <script>
-        // --- DATA: 240 Questions ---
-        // Mapped from user input. A=0, B=1, C=2, D=3.
+        // --- DATA: 340 Questions ---
+        // Helper for T/F
+        const tf = (q, ans, exp) => {
+            return { q: q, options: ["TRUE", "FALSE"], a: ans === "TRUE" ? 0 : 1, exp: exp };
+        };
+
         const questionsData = [
-            // Chapter 1
+            // --- CHAPTER 1: INTRO ---
             {q: "Which principle is defined as the ability of the prosthesis to resist vertical tissue-ward forces?", options: ["Retention", "Support", "Stability", "Reciprocation"], a: 1, exp: "Support is the resistance to movement toward the tissues, primarily provided by rests and the denture base."},
             {q: "According to DeVan (1952), what is the priority in RPD construction?", options: ["Replacing what is lost", "Maximum esthetics", "Preservation of that which remains", "Increasing masticatory force"], a: 2, exp: "The primary objective is to preserve remaining teeth and bone rather than just replacing missing structures."},
             {q: "Which sound is most likely to be impaired if anterior teeth are lost without replacement?", options: ["P and B", "F and V", "S and Z", "M and N"], a: 1, exp: "Dentolabial sounds like F and V require contact between the lower lip and upper incisors."},
@@ -487,7 +408,7 @@
             {q: "The 'Interim' partial denture is usually used:", options: ["For 10 years", "Immediately after extraction during the healing period", "Only for elderly patients", "To replace molars only"], a: 1, exp: "It is a short-term temporary solution for esthetics and function."},
             {q: "What determines the choice between an RPD and an FPD?", options: ["Length of the edentulous span and health of abutments", "The color of the gums", "The patient's height", "The type of toothpaste used"], a: 0, exp: "Long spans or weak abutments often require an RPD rather than a bridge."},
             {q: "'Mouth Preparation' includes which of the following?", options: ["Polishing the denture", "Preparing rest seats and guide planes", "Setting the teeth in wax", "Casting the alloy"], a: 1, exp: "These are clinical modifications made to natural teeth to receive the RPD components."},
-            {q: "In the 'Laboratory Step 20', what is performed?", options: ["Delivery and Adjustment", "Finishing and Polishing", "Pouring the cast", "Surveying"], a: 1, exp: "Laboratory work ends with polishing the finished prosthesis."},
+            {q: "In the 'Laboratory Step 20,' what is performed?", options: ["Delivery and Adjustment", "Finishing and Polishing", "Pouring the cast", "Surveying"], a: 1, exp: "Laboratory work ends with polishing the finished prosthesis."},
             {q: "Preserving the 'Tongue Space' is an objective of RPD to avoid:", options: ["Tooth decay", "Speech problems and discomfort", "Gingival bleeding", "Bone growth"], a: 1, exp: "A bulky RPD can restrict the tongue, causing a 'lisp' or 'discomfort'."},
             {q: "Which classification system is most universally accepted for RPD?", options: ["Angle’s Classification", "Kennedy Classification", "Miller’s Classification", "G.V. Black’s"], a: 1, exp: "Kennedy is the standard for partially edentulous arches."},
             {q: "A 'Secondary' lab step like 'Beading the Master Cast' is done to:", options: ["Make it look shiny", "Ensure a positive contact between the metal and the tissues", "Increase the weight", "Measure the undercut"], a: 1, exp: "Beading (grooving the cast) creates a seal for the maxillary major connector."},
@@ -495,7 +416,7 @@
             {q: "Treatment with RPD is indicated for young patients because:", options: ["It is cheap", "Fixed bridges might damage large pulp chambers in young teeth", "They like to play with it", "Their bone is very hard"], a: 1, exp: "RPDs are more conservative for young patients whose teeth are still maturing."},
             {q: "Psychological comfort is improved by RPD through:", options: ["Changing the saliva flow", "Restoring appearance and self-confidence", "Hardening the enamel", "Reducing blood pressure"], a: 1, exp: "Missing teeth often cause social anxiety; RPDs restore the smile."},
 
-            // Chapter 2
+            // --- CHAPTER 2: KENNEDY ---
             {q: "A patient is missing all lower molars on both sides. All other teeth are present. This is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 0, exp: "Bilateral posterior free-end edentulous areas are Class I."},
             {q: "If a patient is missing lower molars on the right side only, it is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 1, exp: "Unilateral posterior free-end area is Class II."},
             {q: "A single gap between the canine and second molar on one side is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 2, exp: "A unilateral bounded space is Class III."},
@@ -512,7 +433,7 @@
             {q: "A single anterior edentulous area that crosses the midline is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 3, exp: "Class IV must cross the midline and be anterior to remaining teeth."},
             {q: "If the second molar is missing and NOT to be replaced, we apply:", options: ["Rule 1", "Rule 4", "Rule 5", "Rule 8"], a: 1, exp: "Rule 4 is the counterpart to Rule 2 for second molars."},
             {q: "How many edentulous areas are present in a 'Class III Mod 2' case?", options: ["1", "2", "3", "5"], a: 2, exp: "1 primary area + 2 modifications = 3 total spaces."},
-            {q: "A patient missing all incisors (#7, 8, 9, 10) and the right first molar (#3) is classified as:", options: ["Class IV Mod 1", "Class III Mod 1", "Class II Mod 1", "Class I"], a: 2, exp: "Rule 5: Most posterior area (#3) determines the class (Class II). The anterior gap is Mod 1."},
+            {q: "A patient missing all incisors (#7, 8, 9, 10) and the right first molar (#3) is classified as:", options: ["Class IV Mod 1", "Class III Mod 1", "Class II Mod 1", "Class I"], a: 3, exp: "0"},
             {q: "Applegate’s rules were created primarily because:", options: ["Kennedy was wrong", "To handle complexities like missing molars and multiple gaps", "To make dentistry harder", "To sell more books"], a: 1, exp: "Kennedy's basic system needed specific rules for clinical consistency."},
             {q: "If a patient is missing only the four lower premolars, this is:", options: ["Class I", "Class III Mod 1", "Class IV", "Class II"], a: 1, exp: "Two separate bounded gaps on y-axis = Class III (primary) + Mod 1."},
             {q: "Which rule says 'Extent of modification is not considered'?", options: ["Rule 4", "Rule 6", "Rule 7", "Rule 8"], a: 2, exp: "Size doesn't matter for modification count."},
@@ -527,7 +448,7 @@
             {q: "Modification spaces are designated by:", options: ["Letters (A, B, C)", "Numbers (1, 2, 3)", "Roman numerals", "Tooth names"], a: 1, exp: "e.g., Class I Modification 1."},
             {q: "Professional Insight: Which class requires the most complex 'Stress-breaker' design?", options: ["Class I", "Class II", "Class III", "Class IV"], a: 0, exp: "Class I has two free-ends, creating the most rotation and stress on abutments."},
 
-            // Chapter 3
+            // --- CHAPTER 3: SUPPORT ---
             {q: "'Support' is the resistance of the denture to movement in which direction?", options: ["Away from tissues", "Toward oral tissues", "Horizontally", "Mesially"], a: 1, exp: "It prevents the denture from sinking and damaging the mucosa."},
             {q: "A partial denture WITHOUT occlusal rests is clinically known as a:", options: ["Fixed bridge", "Gum stripper", "Tooth-borne RPD", "Overdenture"], a: 1, exp: "Without rests, occlusal forces push the denture directly into the gums, causing recession and bone loss."},
             {q: "The angle formed between the minor connector and the occlusal rest should be:", options: ["Exactly 90 degrees", "More than 90 degrees", "Less than 90 degrees (Acute angle)", "180 degrees"], a: 2, exp: "An acute angle ensures forces are directed down the long axis of the tooth and prevents 'slippage'."},
@@ -559,7 +480,7 @@
             {q: "What is a 'Finger Rest'?", options: ["A rest for the dentist's hand", "A small rigid extension contacting the incisal edge, usually on lower teeth", "A plastic rest", "A type of clasp"], a: 1, exp: "It is a small auxiliary rest used for stabilization."},
             {q: "Professional Tip: 'Torque' on an abutment tooth is minimized by:", options: ["Using more clasps", "Placing mesial rests and using a saucer-shaped seat in extension cases", "Removing the rest", "Using a gold alloy"], a: 1, exp: "Proper placement and shape allow for stress-breaking movement."},
 
-            // Chapter 4
+            // --- CHAPTER 4: RETAINERS ---
             {q: "A 'Direct Retainer' prevents dislodgment of the prosthesis in which direction?", options: ["Toward the tissues", "Away from the tissues (occlusally)", "Mesially", "Lingually"], a: 1, exp: "It 'hooks' the teeth to keep the denture from falling or lifting."},
             {q: "Which part of the clasp assembly is responsible for 'Support'?", options: ["Retentive arm", "Reciprocal arm", "Occlusal rest", "Minor connector"], a: 2, exp: "Rests are the only parts designed to resist vertical pressure."},
             {q: "'Retention' is provided by the clasp tip engaging the:", options: ["Height of contour", "Occlusal surface", "Undercut area (Gingival to the survey line)", "Minor connector"], a: 2, exp: "It must sit 'below' the widest part of the tooth to lock in place."},
@@ -591,7 +512,7 @@
             {q: "If the 'Straight line joining two clasps' bisects the denture, the design is:", options: ["Unstable", "Balanced and ideal", "Too heavy", "Illegal"], a: 1, exp: "Centering the retention points provides the most stability."},
             {q: "Professional Tip: 'Gravity' helps with retention in:", options: ["Upper dentures", "Lower dentures", "Both", "Neither"], a: 1, exp: "The weight of the lower denture helps it stay 'down' on the ridge."},
 
-            // Chapter 5
+            // --- CHAPTER 5: SPECIFIC CLASPS ---
             {q: "The 'Aker's Clasp' (Circumferential) is the 'Classic' choice for:", options: ["Free-end saddles", "Bounded edentulous areas (Tooth-borne)", "Anterior teeth", "Mobile teeth"], a: 1, exp: "It is the go-to design for spaces surrounded by solid teeth."},
             {q: "An 'Extended Clasp' is used when:", options: ["The adjacent tooth has a good undercut", "The adjacent tooth has NO suitable undercut, so we reach for a farther tooth", "The patient has a big mouth", "To replace all molars"], a: 1, exp: "It 'walks' across teeth to find a usable retention area."},
             {q: "The 'RPI System' was designed specifically for:", options: ["Class III", "Class IV", "Distal Extension (Class I and II) to reduce stress on abutments", "Fixed bridges"], a: 2, exp: "It uses a mesial rest to change the fulcrum and move the clasp 'away' from the tooth during load."},
@@ -604,7 +525,7 @@
             {q: "'Double Akers' (Embrasure Clasp) is commonly used in:", options: ["Class I", "Class IV on the posterior teeth for stabilization", "Single tooth loss", "Temporary dentures"], a: 1, exp: "It provides retention on the 'non-edentulous' side of the mouth."},
             {q: "The 'Tripping Action' (Push-type) of bar clasps provides:", options: ["Lower retention", "Higher retention compared to pull-type clasps", "Less bracing", "More comfort"], a: 1, exp: "It's harder to 'push' a tip over an undercut than to 'pull' it."},
             {q: "A 'Reverse-Action' Clasp (C-clasp) is chosen when:", options: ["There is an undercut near the minor connector", "There is no undercut", "Esthetics is priority", "To replace incisors"], a: 0, exp: "It loops back on itself to reach an undercut that's 'behind' its origin."},
-            {q: "'Indirect Retainers' should be placed:", options: ["Right next to the saddle", "As far as possible from the fulcrum line", "Under the tongue", "Only on molars"], a: 1, exp: "A longer lever arm makes the retainer more effective at stopping rotation."},
+            {q: "'Indirect Retainers' should be placed:", options: ["Right next to the saddles", "As far as possible from the fulcrum line", "Under the tongue", "Only on molars"], a: 1, exp: "A longer lever arm makes the retainer more effective at stopping rotation."},
             {q: "In the 'RPA' system, the 'A' stands for:", options: ["Anterior rest", "Aker’s clasp", "Artificial teeth", "Alginate"], a: 1, exp: "Used as an alternative to RPI when an I-bar cannot be placed due to tissue undercuts."},
             {q: "The 'Back-action Clasp' is a modification of the:", options: ["Aker's clasp", "Ring clasp", "I-Bar", "T-Bar"], a: 1, exp: "It is used for tilted molars but is rarely used due to poor stress distribution."},
             {q: "'Modified T-bar' or 'L-bar' are used in free-end cases to:", options: ["Look better", "Protect the abutment tooth from being 'pulled' backwards", "Increase bracing", "Save metal"], a: 1, exp: "They provide a more favorable stress direction."},
@@ -623,7 +544,7 @@
             {q: "In RPI, during function, the I-bar moves:", options: ["Toward the tooth", "Away from the tooth surface (disengages)", "Upwards", "Into the bone"], a: 1, exp: "This is a 'stress-releasing' design to protect the abutment."},
             {q: "Professional Tip: 'Patient Tolerance' is usually better for:", options: ["Bar clasps", "Aker’s clasps (Occlusal approach)", "Ring clasps", "Attachments"], a: 1, exp: "Bar clasps in the vestibule can irritate the cheeks and lips."},
 
-            // Chapter 6
+            // --- CHAPTER 6: CONNECTORS ---
             {q: "The primary requirement of any Major Connector is:", options: ["Flexibility", "Rigidity", "Esthetics", "Light weight"], a: 1, exp: "It must connect both sides firmly to distribute forces equally (Cross-arch stabilization)."},
             {q: "What is the consequence of a 'Flexible' major connector?", options: ["It is more comfortable", "It causes localized bone resorption and 'pumping' of abutment teeth", "It improves retention", "It is cheaper to make"], a: 1, exp: "It fails to distribute stress, damaging the tissues it's supposed to protect."},
             {q: "In the 'Maxilla,' the border of the connector should be ____ mm away from the gingival margin.", options: ["3 mm", "4 mm", "6 mm", "10 mm"], a: 2, exp: "To avoid gingival impingement and inflammation."},
@@ -635,13 +556,13 @@
             {q: "A 'Lingual Plate' (Apron) is indicated when:", options: ["There is plenty of space", "There is a high lingual frenum or shallow floor of the mouth (<7mm)", "The patient has no tongue", "To replace only one tooth"], a: 1, exp: "It covers the teeth to provide strength where a bar cannot fit."},
             {q: "'Double Palatal Connector' (Ring design) is very rigid because:", options: ["It is very thick", "The metal is located in two different planes (L-beam effect)", "It is made of titanium", "It covers the throat"], a: 1, exp: "This geometry resists bending in all directions."},
             {q: "The 'Labial Bar' is used specifically when:", options: ["The patient wants to show off the metal", "There is severe lingual inclination of the lower teeth or large lingual tori", "To replace front teeth", "It is cheaper"], a: 1, exp: "It is a 'last resort' when the lingual side cannot be used."},
-            {q: "How deep should the 'Bead' groove be on the master cast?", options: ["0.5 mm", "2.0 mm", "5.0 mm", "1 inch"], a: 0, exp: "A shallow groove is enough to create a seal without hurting the patient."},
+            {q: "How deep should the 'Bead' groove be on the master cast?", options: ["0.2 mm", "0.5 mm", "1.0 mm", "1.5 mm"], a: 1, exp: "A shallow groove is enough to create a seal without hurting the patient."},
             {q: "'Full Palatal Plate' is the best choice when:", options: ["Only 1 tooth is missing", "5 or fewer teeth remain (few abutments)", "The patient is young", "To save money"], a: 1, exp: "It provides maximum support from the entire hard palate."},
             {q: "Mandibular major connectors MUST have 'Relief' underneath because:", options: ["To make them lighter", "The underlying mucosa is thin, sensitive, and non-displaceable", "To hide the metal", "To trap food"], a: 1, exp: "Direct contact would cause painful pressure spots on the bone."},
             {q: "Which is the 'Most Commonly Used' maxillary connector due to comfort and rigidity?", options: ["Palatal bar", "Middle palatal strap", "Horse-shoe", "Labial bar"], a: 1, exp: "It is well-tolerated by the tongue and structurally sound."},
             {q: "A 'Cingulum Bar' (Dental bar) is used when:", options: ["Long clinical crowns are present and there's no room for a lingual bar", "Teeth are missing", "For esthetics", "In the maxilla only"], a: 0, exp: "It sits on the 'teeth' rather than the 'gums'."},
             {q: "'Relief' is NOT required for maxillary major connectors EXCEPT when:", options: ["There is a hard midline suture or palatal torus", "Every case", "Never", "For young patients"], a: 0, exp: "Hard bony bumps need relief to prevent the denture from 'rocking'."},
-            {q: "The borders of a maxillary major connector should be placed:", options: ["On the crests of the rugae", "In the valleys (depressions) between the rugae", "On the incisors", "In the throat"], a: 1, exp: "Placing them in the 'valleys' makes them less noticeable to the tongue."},
+            {q: "The borders of a maxillary major connector should be placed:", options: ["On the crests of the rugae", "In the valleys (depressions) between the rugae", "On the incisive papilla", "On the soft palate"], a: 1, exp: "Placing them in the 'valleys' makes them less noticeable to the tongue."},
             {q: "'Double Lingual Bar' (Kennedy Bar) consists of:", options: ["Two bars on the lip side", "A primary lingual bar and a secondary bar on the cingula", "Acrylic and metal", "Two plates"], a: 1, exp: "It provides indirect retention and stabilization without covering the gingiva."},
             {q: "Why should borders be 'Tapered' (thinned at the edges)?", options: ["To save metal", "To make the transition between metal and tissue undetectable to the tongue", "To make them sharp", "For easier casting"], a: 1, exp: "Thick edges are very annoying and can cause speech problems."},
             {q: "Which Mandibular connector covers the most tissue?", options: ["Lingual bar", "Sublingual bar", "Lingual plate", "Labial bar"], a: 2, exp: "The plate covers everything from the floor of the mouth up to the teeth."},
@@ -655,7 +576,7 @@
             {q: "'AH-line' (Vibrating line) marks the posterior limit for:", options: ["Lingual bar", "Full palatal plate", "All RPDs", "Only front teeth"], a: 1, exp: "The plate must not go onto the soft palate or it will lose suction and cause gagging."},
             {q: "Professional Tip: 'Major Connector' connects:", options: ["Teeth to teeth", "One side of the arch to the opposite side", "The metal to the plastic", "The patient to the dentist"], a: 1, exp: "The fundamental definition of a major connector."},
 
-            // Chapter 7
+            // --- CHAPTER 7: MINOR CONNECTORS ---
             {q: "The primary function of a 'Minor Connector' is:", options: ["To provide retention", "To connect all components (clasps, rests) to the major connector", "To replace missing teeth", "To clean the mouth"], a: 1, exp: "It's the 'link' that holds everything together."},
             {q: "Minor connectors also help in 'Bracing' by:", options: ["Being very flexible", "Contacting vertical guide planes on the abutment teeth", "Engaging undercuts", "Falling out"], a: 1, exp: "They resist lateral/horizontal movement of the denture."},
             {q: "A 'Lattice' type minor connector provides:", options: ["The best mechanical retention for the acrylic resin denture base", "The best esthetics", "Direct tooth support", "Suction"], a: 0, exp: "The large holes allow acrylic to wrap around and lock the metal."},
@@ -674,7 +595,7 @@
             {q: "'Meshwork' type minor connectors have:", options: ["Large square holes", "Small, fine holes", "No holes", "Only one hole"], a: 1, exp: "Used for smaller spaces where strength is needed."},
             {q: "'Tissue Stoppers' are mandatory to:", options: ["Stop bleeding", "Stabilize the metal framework on the cast during acrylic processing", "Replace molars", "Measure saliva"], a: 1, exp: "They prevent the framework from shifting when the plastic is packed."},
             {q: "'Metallic Teeth' are indicated when:", options: ["Esthetics is priority", "There is EXTREMELY limited inter-arch space (VDO is short)", "The patient is a robot", "To reduce cost"], a: 1, exp: "Metal is strong even when very thin."},
-            {q: "'Facings' are artificial teeth where:", options: ["Only the front surface is porcelain/plastic, attached to a metal back", "The tooth is made of gold", "The tooth is transparent", "For molars only"], a: 0, exp: "Used in deep bite cases for strength and esthetics."},
+            {q: "'Facings' are artificial teeth where:", options: ["Only the front surface is porcelain/plastic, attached to a metal back", "The tooth is made of gold", "For molars only"], a: 0, exp: "Used in deep bite cases for strength and esthetics."},
             {q: "'Mechanical Retention' is needed for Porcelain teeth because:", options: ["They are too smooth", "They do not bond chemically to acrylic resin", "To make them heavier", "To hide the metal"], a: 1, exp: "They need holes (diatorics) or pins to stay in the denture."},
             {q: "'Tube Teeth' are unique because:", options: ["They are hollow", "They are cemented over a metal post on the framework", "They are made of rubber", "For temporary use only"], a: 1, exp: "A high-quality, very esthetic option for bounded spaces."},
             {q: "Why is 'Chrome-Cobalt' the standard alloy for frameworks?", options: ["It is cheap and very rigid", "It is soft like lead", "It is gold in color", "It melts at 100°C"], a: 0, exp: "Its rigidity allows for thin, strong connectors."},
@@ -687,7 +608,7 @@
             {q: "'Internal Finish Line' is found on which side of the metal?", options: ["The outer side (visible)", "The tissue side (underneath)", "On the clasp tip", "In the artificial tooth"], a: 1, exp: "It creates a clean border for the acrylic against the gums."},
             {q: "Professional Tip: 'Resilience' (Shock absorption) is HIGHER in:", options: ["Porcelain teeth", "Acrylic resin teeth", "Gold teeth", "Chrome-Cobalt"], a: 1, exp: "Plastic absorbs bite forces better, protecting the underlying bone."},
 
-            // Chapter 8
+            // --- CHAPTER 8: LABORATORY ---
             {q: "According to the image, which part is labeled number '4'?", options: ["Cast Holder", "Analyzing Rod (Vertical Rod)", "Adjusting Screw", "Base"], a: 1, exp: "The vertical spindle used to check parallelism and path of insertion."},
             {q: "What is the function of the 'Carbon Marker' (Attachment #2)?", options: ["Measuring undercuts", "Marking the survey line and height of contour on the tooth", "Carving wax", "Polishing metal"], a: 1, exp: "It leaves a physical line on the cast at the widest part of the tooth."},
             {q: "Which tool is used to 'Measure undercut depth' (Attachment #3)?", options: ["Analyzing Rod", "Undercut Gauges (e.g., 0.01\", 0.02\")", "Wax Knife", "Screwdriver"], a: 1, exp: "Gauges determine exactly how far a clasp tip can go into an undercut."},
@@ -717,251 +638,324 @@
             {q: "Which part provides 'Stability' to the whole surveyor?", options: ["Horizontal arm", "Base", "Carbon marker", "Cast"], a: 1, exp: "A heavy, flat base is required for accurate surveying."},
             {q: "'Analyzing Rod' is used BEFORE the carbon marker to:", options: ["Clean the tooth", "Check for parallelism and the best possible tilt", "Mark the line", "Carve wax"], a: 1, exp: "It's the diagnostic tool used to 'plan' the survey."},
             {q: "Why is the 'Refractory Cast' NOT placed on the surveyor?", options: ["It is too heavy", "Its surface is too weak and would be damaged by the tools", "It's illegal", "It's not necessary"], a: 1, exp: "The silica material is fragile; all surveying must be finished on the master cast first."},
-            {q: "Professional Tip: The 'Surveyor' is essential because it controls:", options: ["Design accuracy, retention, and insertion path", "The patient's pain", "The speed of the dentist", "The color of the denture"], a: 0, exp: "It is the mechanical guide that ensures the RPD actually works."}
+            {q: "Professional Tip: The 'Surveyor' is essential because it controls:", options: ["Design accuracy, retention, and insertion path", "The patient's pain", "The speed of the dentist", "The color of the denture"], a: 0, exp: "It is the mechanical guide that ensures the RPD actually works."},
+
+            // --- CHAPTER 9: CLINICAL CASES (T/F) ---
+            tf("Scenario: A patient has Kennedy Class I with a 5mm distance between the gingival margin and the floor of the mouth. The dentist chooses a Lingual Bar as the major connector.", "FALSE", "(A Lingual Bar requires at least 7-8mm of space. A Lingual Plate is required here)."),
+            tf("Scenario: For a severely mesially tilted mandibular third molar used as an abutment, a Ring Clasp with a supporting strut is selected.", "TRUE", "(Ring clasps are specifically designed for isolated, tilted molars to engage distant undercuts)."),
+            tf("Scenario: In a distal extension RPD (Class II), the dentist prepares the occlusal rest seat on the distal surface of the primary abutment.", "FALSE", "(A mesial rest is preferred in extension cases to change the lever action and protect the abutment)."),
+            tf("Scenario: A patient has a large, non-operable palatal torus extending to the vibrating line. The dentist designs a Full Palatal Plate with 1.5mm relief over the torus.", "FALSE", "(A Full Palatal Plate is contraindicated. A U-shaped or Horse-shoe connector is needed to bypass the torus)."),
+            tf("Scenario: A dentist uses an I-Bar clasp on a premolar with a 0.03-inch tissue undercut located 2mm gingival to the tooth.", "FALSE", "(Gingival/Tissue undercuts contraindicate I-bars because the bar will irritate the soft tissue during function)."),
+            tf("Scenario: To provide indirect retention in a Kennedy Class I case, rests are placed on the first premolars, which are the farthest points from the fulcrum line.", "TRUE", "(Indirect retainers must be placed as far as possible from the fulcrum line to be effective)."),
+            tf("Scenario: During mouth preparation for a Class III RPD, the dentist prepares a box-shaped rest seat with a 95-degree angle to the minor connector.", "FALSE", "(The angle must be acute, less than 90 degrees, to ensure the force is directed down the long axis)."),
+            tf("Scenario: A patient requires an RPD but has very poor oral hygiene and a high caries index. The dentist proceeds with a complex cast metal framework.", "FALSE", "(RPDs are contraindicated in patients with poor oral hygiene until the condition is controlled)."),
+            tf("Scenario: For a patient with Grade I mobility on lower anterior teeth, a Lingual Plate is chosen to provide a splinting effect.", "TRUE", "(Lingual plates help distribute lateral forces and stabilize mobile teeth)."),
+            tf("Scenario: A dentist prepares an incisal rest on a mandibular canine because it is more esthetic than a cingulum rest.", "FALSE", "(Cingulum rests are more esthetic and exert less tipping force than incisal rests)."),
+            tf("Scenario: In an RPI system, the I-bar is designed to move superiorly and into the undercut when the denture base is loaded.", "FALSE", "(The I-bar is designed to move mesio-gingivally and away from the tooth to release stress)."),
+            tf("Scenario: A Maxillary Class III case with short spans uses a Single Palatal Strap of 10mm width.", "TRUE", "(Palatal straps are excellent for tooth-borne cases with short spans)."),
+            tf("Scenario: A dentist decides to use a Labial Bar because the patient has severe lingual inclination of all mandibular premolars.", "TRUE", "(Labial bars are the last resort when lingual undercuts or inclinations prevent lingual connectors)."),
+            tf("Scenario: During a survey, the dentist tilts the cast anteriorly to increase the undercut on the distal surface of the abutment.", "TRUE", "(Tilting changes the relation of the tooth surfaces to the vertical spindle)."),
+            tf("Scenario: The dentist prepares a 0.5mm deep bead on the mandibular master cast along the borders of the Lingual Bar.", "FALSE", "(Beading is strictly contraindicated in the mandible due to thin, sensitive mucosa)."),
+            tf("Scenario: A patient is missing #18, #19, #30, and #31. The dentist classifies this as Kennedy Class II Modification 1.", "FALSE", "(This is bilateral posterior loss, which is Class I)."),
+            tf("Scenario: To compensate for the 2.3% casting shrinkage of Chrome-Cobalt, the technician ensures the investment material has high thermal expansion.", "TRUE", "(Expansion of the mold must equal the shrinkage of the metal for an accurate fit)."),
+            tf("Scenario: A dentist uses a Wrought Wire retentive arm with a cast reciprocal arm on a weak abutment to reduce stress.", "TRUE", "(This is a 'Combination Clasp,' utilizing the flexibility of wrought wire)."),
+            tf("Scenario: For a patient with a very deep bite, the dentist chooses porcelain teeth because they are easier to grind and adjust than acrylic.", "FALSE", "(Acrylic teeth are much easier to adjust and bond chemically to the base in tight spaces)."),
+            tf("Scenario: A technician cools the casting ring rapidly in cold water (quenching) immediately after the metal solidifies to increase hardness.", "FALSE", "(Quenching can lead to distortion and internal stresses; bench cooling is preferred for RPD alloys)."),
+            tf("Scenario: The dentist identifies a survey line that is very high on the mesial and very low on the distal. This is a Diagonal Survey Line.", "TRUE", "(Diagonal lines require specific clasp selection like the Back-action clasp)."),
+            tf("Scenario: A minor connector crossing the gingival margin is designed at a 45-degree angle to save space.", "FALSE", "(Minor connectors must cross at a 90-degree angle to minimize gingival coverage)."),
+            tf("Scenario: A technician places a 1.5mm wax relief under the lattice of an extension base on the master cast before duplication.", "TRUE", "(Relief is necessary to provide space for the acrylic resin 'sandwich')."),
+            tf("Scenario: A patient has only teeth #22 through #27 remaining. The dentist places indirect retainers on #21 and #28.", "FALSE", "(If #21 and #28 are missing, you cannot place rests on them)."),
+            tf("Scenario: The dentist uses a 'Butt Joint' finish line (90 degrees) where the acrylic meets the metal to prevent thinning of the plastic.", "TRUE", "(A butt joint provides bulk and prevents 'chipping' of the acrylic edge)."),
+            tf("Scenario: During surveying, the Analyzing Rod is used to determine the exact amount of undercut in millimeters.", "FALSE", "(The Analyzing Rod checks parallelism; the Undercut Gauge measures depth)."),
+            tf("Scenario: A patient presents with missing #8 and #9. All other teeth are present. This is Kennedy Class IV.", "TRUE", "(A single anterior space crossing the midline is Class IV)."),
+            tf("Scenario: A technician uses an 'Inverted Sprue' for a Maxillary RPD to keep the palate clear.", "FALSE", "(Inverted sprues are typically used for Mandibular cases to keep the tongue space clear)."),
+            tf("Scenario: The dentist prepares a rest seat on a PFM crown using a stainless steel round bur.", "FALSE", "(A diamond bur is required to cut porcelain effectively)."),
+            tf("Scenario: After the metal framework is cast, it is cleaned using a sandblaster with aluminum oxide.", "TRUE", "(Sandblasting removes the investment 'skin' and oxides)."),
+            {q: "'High Speed Grinding' involves speeds up to:", options: ["100 RPM", "45,000 RPM", "1 million RPM", "It is done by hand only"], a: 1, exp: "To remove excess metal and 'sprues' quickly."},
+
+            // --- CHAPTER 10: ADVANCED MCQs ---
+            {q: "Which specific biomechanical effect occurs when an RPD rotates around the fulcrum line away from the tissue?", options: ["The indirect retainer is unseated.", "The retentive clasp tips engage the undercuts.", "The indirect retainer is pressed into its seat.", "The major connector flexes."], a: 2, exp: "(Indirect retainers work by resisting the rotation that lifts the base)."},
+            {q: "In the RPI system, the proximal plate and the minor connector of the mesial rest provide reciprocation. At what point must this contact occur?", options: ["After the retentive tip reaches the undercut.", "Only when the denture is fully seated.", "Before the retentive tip passes over the height of contour.", "During the casting process."], a: 2, exp: "(Reciprocation must be active during the entire period of clasp flexion)."},
+            {q: "The 'L-beam' effect in an Antero-Posterior Palatal Strap is achieved because:", options: ["It uses a specific gold alloy.", "The metal is located in two different planes.", "The strap is at least 2mm thick.", "It covers the rugae crests."], a: 1, exp: "(Placing metal in different planes increases structural rigidity exponentially)."},
+            {q: "Which survey line indicates that a 'Back-Action Clasp' should be used instead of a standard Aker's?", options: ["A low line on the distal and high on the mesial.", "A high line on the distal and low on the mesial.", "A medium line.", "A horizontal line."], a: 1, exp: "(Back-action clasps engage undercuts that are difficult to reach from the minor connector origin)."},
+            {q: "When using Agar-Agar for duplication, 'Secondary Shrinkage' is minimized by:", options: ["Heating the agar to 100°C.", "Rapidly cooling the top of the flask.", "Using the 'Ice Water Trick' at the base of the flask.", "Pouring the agar into a dry flask."], a: 2, exp: "(Directional cooling from the base ensures dimensions are preserved)."},
+            {q: "The modulus of elasticity of Chrome-Cobalt is approximately 220 GPa. What does this mean for clasp design compared to Gold?", options: ["Clasps must be longer and thinner to achieve the same flexibility.", "Clasps must be shorter and thicker.", "Chrome-Cobalt cannot be used for clasps.", "Retention is automatically doubled."], a: 0, exp: "(Co-Cr is twice as rigid as Gold, so design must compensate to avoid overstressing teeth)."},
+            {q: "A 'Tissue Stopper' in a lattice minor connector serves what critical purpose during the 'Packing' stage?", options: ["It prevents acrylic from flowing into the mesh.", "It maintains the vertical relationship between the framework and the cast under pressure.", "It increases the weight of the denture.", "It provides suction."], a: 1, exp: "(It prevents the metal mesh from being crushed against the cast)."},
+            {q: "Which Kennedy Class is considered 'Bilateral Tooth-Tissue Supported' but lacks a posterior abutment?", options: ["Class I.", "Class II.", "Class III Mod 1.", "Class IV."], a: 0, exp: "(Class I is the only bilateral distal extension class)."},
+            {q: "In surveying, 'Tripoding' is used to:", options: ["Measure the depth of three undercuts.", "Identify the three best teeth for clasps.", "Allow the laboratory to return the cast to the exact original tilt.", "Balance the weight of the cast."], a: 2, exp: "(It records the specific 3D orientation/path of insertion)."},
+            {q: "The 'Beading' groove for a maxillary major connector should be 'faded out' at which anatomical location?", options: ["The posterior border.", "Within 6mm of the gingival margin.", "The midline and the rugae areas.", "The AH line."], a: 2, exp: "(Abrupt grooves at the midline or rugae cause discomfort and irritation)."},
+            {q: "An RPD framework that is 'Passive' means:", options: ["It falls out easily.", "It exerts no force on the abutment teeth when fully seated.", "It is made of plastic.", "It only uses one clasp."], a: 1, exp: "(Passivity prevents unwanted orthodontic movement of teeth)."},
+            {q: "Which factor is the most critical when deciding between a Lingual Bar and a Lingual Plate?", options: ["Patient age.", "The height of the floor of the mouth during function.", "The number of missing teeth.", "The color of the gingiva."], a: 1, exp: "(Available vertical space is the primary technical decider)."},
+            {q: "The 'Hinge' movement in a saucer-shaped rest seat is intended to:", options: ["Break the clasp.", "Allow the denture base to move without torquing the abutment tooth.", "Increase the bite force.", "Make the denture removable."], a: 1, exp: "(It acts as a stress-breaker)."},
+            {q: "What is the consequence of placing a finish line as a 'Feather Edge' (less than 90 degrees)?", options: ["Better esthetics.", "Acrylic resin chipping and discoloration at the metal interface.", "Increased retention.", "Easier cleaning."], a: 1, exp: "(Thin resin edges are weak and prone to fracture)."},
+            {q: "A 'Cingulum Bar' (Continuous Bar) is rarely used alone because:", options: ["It is too heavy.", "It is highly flexible and provides poor stabilization.", "It causes caries on all teeth.", "It is illegal in some countries."], a: 1, exp: "(Its position on the cingula makes it prone to flexing)."},
+            {q: "Why is 'Induction Heating' preferred over 'Torch Melting' for Co-Cr alloys?", options: ["It is faster.", "It prevents carbon contamination and overheating of the alloy.", "It makes the metal gold-colored.", "It doesn't require electricity."], a: 1, exp: "(Precision control prevents changing the metal's properties)."},
+            {q: "A 'Survey Line' determines the junction between:", options: ["The tooth and the gum.", "The supra-bulge and infra-bulge areas of the tooth.", "The enamel and the dentin.", "The rest and the clasp."], a: 1, exp: "(It marks the widest part of the tooth)."},
+            {q: "The 'Half and Half' clasp is primarily used to:", options: ["Save 50% of the metal.", "Provide stabilization and stress breaking for isolated premolars.", "Replace incisors.", "Make the denture lighter."], a: 1, exp: "(It uses two minor connectors to share the load)."},
+            {q: "In the 'Wax Pattern' stage, why is a 'Surfactant' applied?", options: ["To melt the wax.", "To allow the investment to flow into tiny details without air bubbles.", "To change the color of the wax.", "To glue the sprues."], a: 1, exp: "(It breaks surface tension)."},
+            {q: "Which Kennedy Class does NOT allow for a 'Modification' according to Applegate's Rule 8?", options: ["Class I.", "Class II.", "Class III.", "Class IV."], a: 3, exp: "(Class IV is always a single gap; additional gaps change its classification)."},
+            {q: "A 'Tube Tooth' is retained on the framework by:", options: ["A mechanical pin and cement.", "Chemical bonding to metal.", "Suction.", "Suprabulge clasps."], a: 0, exp: "(A post on the framework fits into a hole in the tooth)."},
+            {q: "The 'AH-Line' is the posterior landmark for:", options: ["The Lingual Bar.", "The Full Palatal Plate.", "The Labial Bar.", "The I-bar."], a: 1, exp: "(It marks the vibrating line/junction of hard and soft palate)."},
+            {q: "What is 'Electrolytic Polishing'?", options: ["Using a physical brush with electricity.", "A chemical process that removes a microscopic layer of metal to create luster.", "Painting the metal with silver.", "Hardening the metal in an oven."], a: 1, exp: "(It ensures a biocompatible, smooth finish)."},
+            {q: "In a 'Class II Mod 1' case, which edentulous area determines the classification?", options: ["The bounded gap.", "The most posterior edentulous area.", "The anterior gap.", "The largest gap."], a: 1, exp: "(Applegate Rule 5)."},
+            {q: "The primary disadvantage of 'Infrabulge' clasps compared to 'Suprabulge' is:", options: ["Worse esthetics.", "Potential for soft tissue irritation and food entrapment in the vestibule.", "Lack of retention.", "They are too rigid."], a: 1, exp: "(The bar crossing the gingiva is the main risk)."},
+            {q: "Which part of the surveyor locks the analyzing rod in place vertically?", options: ["The Horizontal Arm.", "The Adjusting Screw.", "The Base.", "The Carbon Marker."], a: 1, exp: "(Number 5 in the diagram)."},
+            {q: "'Relief' under the Mid-Palatine Raphe is necessary to:", options: ["Increase support.", "Prevent the denture from 'rocking' on the hard midline bone.", "Save metal.", "Help speech."], a: 1, exp: "(The midline is usually non-compressible bone)."},
+            {q: "Why must the 'Sprues' be thicker than the thickest part of the framework?", options: ["To look professional.", "To ensure the sprues remain molten longer to 'feed' the cooling metal.", "To make the casting faster.", "To prevent the ring from exploding."], a: 1, exp: "(Ensures a solid casting without internal voids/porosity)."},
+            {q: "Which rest preparation involves 'Mesio-Distal' concavity and 'Bucco-Lingual' convexity?", options: ["Occlusal rest.", "Incisal rest.", "Cingulum rest.", "Finger rest."], a: 1, exp: "(This specific shape ensures stability on the incisal edge)."},
+            {q: "'Back-Pressure Porosity' is most likely caused by:", options: ["Cold metal.", "Lack of auxiliary air vents in the investment.", "Using gold instead of Co-Cr.", "A broken cast."], a: 1, exp: "(Air cannot escape, so metal cannot enter)."},
+
+            // --- EXAM 1 ---
+            {q: "Kennedy Class I is defined as:", options: ["Unilateral free-end.", "Bilateral free-end.", "Anterior gap.", "Bounded gap."], a: 1, exp: "Bilateral posterior edentulous areas are Class I."},
+            {q: "The 6mm rule in the maxilla protects the:", options: ["Teeth.", "Marginal gingiva.", "Throat.", "Tongue."], a: 1, exp: "Avoids impingement on gum tissue."},
+            tf("True or False: An I-bar provides more bracing than an Aker's clasp.", "FALSE", "(I-bars are flexible; Aker's bodies are rigid)."),
+            {q: "Which connector is used if there is a large palatal torus?", options: ["Full plate.", "U-shaped.", "Mid-strap.", "Palatal bar."], a: 1, exp: "U-shaped bypasses the torus."},
+            {q: "Support in a tooth-borne RPD comes from:", options: ["Clasps.", "Rests.", "Artificial teeth.", "The lab."], a: 1, exp: "Occlusal rests transfer force to teeth."},
+            {q: "The 'Tripping Action' makes a clasp:", options: ["Less retentive.", "More retentive.", "Break easily.", "Fall off."], a: 1, exp: "Pushing a tip into an undercut is harder than pulling it."},
+            {q: "How many rests are in an Embrasure Clasp assembly?", options: ["1.", "2.", "4.", "0."], a: 1, exp: "Two minor connectors with two rests."},
+            tf("True or False: The master cast is duplicated to create the refractory cast.", "TRUE", "Standard procedure for casting."),
+            {q: "Which sound is affected if the maxillary major connector is too bulky anteriorly?", options: ["M/B.", "F/V.", "S/T.", "L/N."], a: 2, exp: "Sibilant sounds (S, T) require tongue space."},
+            {q: "A 'Diagonal Survey Line' is best handled by a:", options: ["Ring Clasp.", "Back-Action Clasp.", "I-bar.", "Aker’s."], a: 1, exp: "Back-action engages distant undercuts."},
+            {q: "Indirect retention is MANDATORY in:", options: ["Class III.", "Class I and II.", "Single crown.", "Fillings."], a: 1, exp: "To prevent rotation of free-end saddles."},
+            {q: "The 'Butt Joint' prevents:", options: ["Suction.", "Acrylic chipping.", "Weight gain.", "Bad taste."], a: 1, exp: "Provides bulk to the plastic edge."},
+            {q: "Which bur prepares a cingulum rest ledge?", options: ["Round.", "Inverted Cone.", "Flame.", "Fissure."], a: 1, exp: "Creates the step/ledge on the back of the canine."},
+            {q: "A 'Surveyor' determines the:", options: ["Shade.", "Path of insertion.", "Patient's age.", "Tooth hardness."], a: 1, exp: "Direction for seating the RPD."},
+            {q: "The angle between a rest and minor connector must be:", options: ["90°.", "> 90°.", "< 90°.", "180°."], a: 2, exp: "Acute angle prevents slippage."},
+            {q: "Which material is more 'Biocompatible'?", options: ["Nickel.", "Titanium.", "Lead.", "Copper."], a: 1, exp: "Titanium has excellent biocompatibility."},
+            {q: "'Relief' under a mandibular connector is usually:", options: ["0 mm.", "0.5 - 1.0 mm.", "10 mm.", "5 cm."], a: 1, exp: "To accommodate the thin, sensitive mucosa."},
+            {q: "A 'Clasp' is an example of a:", options: ["Major connector.", "Direct retainer.", "Indirect retainer.", "Tooth."], a: 1, exp: "Retains the prosthesis."},
+            tf("True or False: Applegate's Rule 5 says the largest gap determines the class.", "FALSE", "(The most posterior determines it)."),
+            {q: "The 'Lattice' design provides:", options: ["Suction.", "Mechanical retention for acrylic.", "Esthetics.", "Strength only."], a: 1, exp: "Acrylic flows through holes to lock in."},
+
+            // --- EXAM 2 ---
+            {q: "A 'Single Anterior Gap' crossing the midline is:", options: ["Class I.", "Class II.", "Class III.", "Class IV."], a: 3, exp: "Definition of Class IV."},
+            {q: "Which rest prevents 'Slippage'?", options: ["Obtuse seat.", "Positive (Acute) seat.", "Flat seat.", "Round seat."], a: 1, exp: "Acute angle locks the rest."},
+            tf("True or False: Beading is done on the mandibular cast.", "FALSE", "(Contraindicated due to tissue sensitivity)."),
+            {q: "The RPI system uses a ____ rest.", options: ["Distal.", "Mesial.", "Lingual.", "Buccal."], a: 1, exp: "Mesial rest changes the fulcrum."},
+            {q: "Which alloy is twice as stiff as gold?", options: ["Silver.", "Chrome-Cobalt.", "Tin.", "Lead."], a: 1, exp: "Chrome-Cobalt has high modulus of elasticity."},
+            {q: "The 'Fulcrum Line' is the axis of:", options: ["Digestion.", "Rotation.", "Breathing.", "Growth."], a: 1, exp: "Axis of rotation for the denture."},
+            {q: "A 'Tissue Stopper' is part of the:", options: ["Clasp.", "Minor connector/Lattice.", "Major connector.", "Teeth."], a: 1, exp: "Part of the metal framework."},
+            tf("True or False: Porcelain teeth bond chemically to acrylic.", "FALSE", "(They need mechanical retention)."),
+            {q: "'Electrolytic Polishing' uses:", options: ["A hammer.", "An acid bath + electricity.", "Soap.", "Sand."], a: 1, exp: "Chemical and electrical process."},
+            {q: "The 'Analyzing Rod' checks:", options: ["Color.", "Parallelism.", "Hardness.", "Weight."], a: 1, exp: "Aligns the cast."},
+            {q: "Which clasp is best for a solitary, tilted molar?", options: ["Aker’s.", "Ring Clasp.", "I-bar.", "T-bar."], a: 1, exp: "Encircles the tooth effectively."},
+            {q: "In the maxilla, the connector must be ____ mm from the gums.", options: ["2.", "4.", "6.", "10."], a: 2, exp: "The 6mm rule."},
+            {q: "A 'Wrought Wire' is shaped by:", options: ["Casting.", "Bending (hand-shaping).", "3D printing.", "Carving."], a: 1, exp: "Hand-bent wire."},
+            {q: "The 'Refractory Cast' is destroyed during:", options: ["Impression.", "Devesting (ring removal).", "Polishing.", "Delivery."], a: 1, exp: "Broken to remove the metal."},
+            {q: "A 'Cingulum Rest' is best on a:", options: ["Lower incisor.", "Maxillary Canine.", "Molar.", "Premolar."], a: 1, exp: "Canine has a strong cingulum."},
+            {q: "'Reciprocation' must happen ____ retention begins.", options: ["After.", "During or before.", "Never.", "Tomorrow."], a: 1, exp: "Must counteract force during flexion."},
+            tf("True or False: Class III cases need indirect retainers.", "FALSE", "(They are tooth-supported)."),
+            {q: "Which material is technique sensitive regarding cooling?", options: ["Stone.", "Agar-Agar.", "Gold.", "Wax."], a: 1, exp: "Requires controlled cooling."},
+            {q: "The 'Finish Line' is the junction of:", options: ["Metal and Resin.", "Tooth and Metal.", "Resin and Resin.", "Mouth and Air."], a: 0, exp: "Where the framework meets the base."},
+            {q: "A 'Labial Bar' is used for:", options: ["Esthetics.", "Severe lingual inclination/Tori.", "Fun.", "Strength."], a: 1, exp: "Last resort option."}
         ];
 
         // --- APP LOGIC ---
 
         const app = {
             currentChapter: null,
-            currentQuestionIndex: 0,
+            currentIndex: 0, // Tracks question index within the chapter
+            startIndex: 0,  // Tracks starting index in the global questionsData array
             score: 0,
-            userAnswers: [],
             
+            chapterConfig: [
+                { name: "Chapter 1", sub: "Intro & Terminology", count: 30 },
+                { name: "Chapter 2", sub: "Kennedy Classification", count: 30 },
+                { name: "Chapter 3", sub: "Support & Rests", count: 30 },
+                { name: "Chapter 4", sub: "Direct Retainers", count: 30 },
+                { name: "Chapter 5", sub: "Clasps & RPI", count: 30 },
+                { name: "Chapter 6", sub: "Major Connectors", count: 30 },
+                { name: "Chapter 7", sub: "Minor Connectors", count: 30 },
+                { name: "Chapter 8", sub: "Surveying & Lab", count: 30 },
+                { name: "Chapter 9", sub: "Clinical Cases (T/F)", count: 30 },
+                { name: "Chapter 10", sub: "Advanced MCQs", count: 30 },
+                { name: "Exam 1", sub: "Comprehensive Review", count: 20 },
+                { name: "Exam 2", sub: "Final Assessment", count: 20 }
+            ],
+
             // DOM Elements
             elements: {
                 homeView: document.getElementById('homeView'),
                 quizView: document.getElementById('quizView'),
                 resultView: document.getElementById('resultView'),
-                chapterList: document.getElementById('chapterList'),
-                questionText: document.getElementById('questionText'),
-                optionsList: document.getElementById('optionsList'),
-                progressTracker: document.getElementById('progressTracker'),
-                feedbackArea: document.getElementById('feedbackArea'),
-                feedbackTitle: document.getElementById('feedbackTitle'),
-                explanationText: document.getElementById('explanationText'),
+                chapterGrid: document.getElementById('chapterGrid'),
+                qText: document.getElementById('qText'),
+                options: document.getElementById('optionsArea'),
                 nextBtn: document.getElementById('nextBtn'),
-                finalScore: document.getElementById('finalScore'),
+                exitBtn: document.getElementById('exitBtn'),
+                modal: document.getElementById('introModal'),
+                feedback: document.getElementById('feedbackBox'),
+                fTitle: document.getElementById('feedbackTitle'),
+                fText: document.getElementById('feedbackText'),
+                progressTracker: document.getElementById('progressTracker'),
                 scoreCircle: document.getElementById('scoreCircle'),
+                finalScore: document.getElementById('finalScore'),
                 resultMsg: document.getElementById('resultMessage'),
-                resultDetails: document.getElementById('resultDetails'),
-                homeBtn: document.getElementById('homeBtn')
+                resultDetails: document.getElementById('resultDetails')
             },
 
             init() {
-                this.renderChapterList();
-                this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
-            },
-
-            renderChapterList() {
-                this.elements.chapterList.innerHTML = '';
-                const totalQuestions = questionsData.length;
-                const questionsPerChapter = 30;
-                const totalChapters = 8;
-
-                for (let i = 1; i <= totalChapters; i++) {
-                    const start = (i - 1) * questionsPerChapter;
-                    const end = start + questionsPerChapter;
-                    const progress = this.getChapterProgress(i);
-                    
-                    const card = document.createElement('div');
-                    card.className = 'chapter-card';
-                    card.onclick = () => this.startChapter(i);
-                    
-                    let statusHtml = '';
-                    if (progress.completed) {
-                        statusHtml = `<span class="status-badge completed">Completed</span>`;
-                    } else if (progress.lastIndex > 0) {
-                        statusHtml = `<span class="status-badge">In Progress</span>`;
-                    }
-
-                    card.innerHTML = `
-                        ${statusHtml}
-                        <h3>Chapter ${i}</h3>
-                        <p>Questions ${start + 1} - ${end}</p>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width: ${progress.percent}%"></div>
-                        </div>
-                    `;
-                    this.elements.chapterList.appendChild(card);
-                }
-            },
-
-            getChapterProgress(chapterNum) {
-                const saved = localStorage.getItem(`rpdboss_chapter${chapterNum}`);
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    const percent = (data.lastIndex / 30) * 100;
-                    return { lastIndex: data.lastIndex, completed: data.completed, percent: percent };
-                }
-                return { lastIndex: 0, completed: false, percent: 0 };
-            },
-
-            startChapter(chapterNum) {
-                this.currentChapter = chapterNum;
-                const progress = this.getChapterProgress(chapterNum);
+                this.renderGrid();
                 
-                if (progress.completed) {
-                    // Ask to restart or just view results? Let's restart for practice.
-                    if(!confirm("Chapter completed. Retake?")) return;
-                    this.resetChapterState();
-                } else {
-                    this.currentQuestionIndex = progress.lastIndex;
-                    // Load previous answers if needed (simplified here: just resuming index)
-                    // In a fuller app, we'd load the score so far. 
-                    // For this design, we resume question index but reset current session score.
-                    this.score = 0; 
-                    this.userAnswers = new Array(30).fill(null);
+                // Intro Modal Logic
+                setTimeout(() => this.elements.modal.classList.add('show'), 500);
+
+                // Event Listeners
+                this.elements.nextBtn.onclick = () => this.nextQ();
+                this.elements.exitBtn.onclick = () => this.goHome();
+            },
+
+            renderGrid() {
+                this.elements.chapterGrid.innerHTML = this.chapterConfig.map((chap, index) => `
+                    <div class="chapter-card" onclick="app.startChapter(${index})">
+                        <div class="bg-number">${index + 1}</div>
+                        <div class="card-content">
+                            <h3 class="chapter-title">${chap.name}</h3>
+                            <p class="chapter-desc">${chap.sub}<br><span style="font-size:0.85rem; color:#aaa;">${chap.count} Questions</span></p>
+                            <div class="stats-box">
+                                <span>Start</span>
+                                <span>➔</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            startChapter(index) {
+                this.currentChapter = index;
+                this.currentIndex = 0;
+                this.score = 0;
+
+                // Calculate Start Index in the global questionsData array
+                this.startIndex = 0;
+                for(let i = 0; i < index; i++) {
+                    this.startIndex += this.chapterConfig[i].count;
                 }
 
                 this.switchView('quiz');
-                this.elements.homeBtn.style.display = 'block';
-                this.renderQuestion();
+                this.elements.exitBtn.style.display = 'block';
+                this.loadQuestion();
             },
 
-            resetChapterState() {
-                this.currentQuestionIndex = 0;
-                this.score = 0;
-                this.userAnswers = new Array(30).fill(null);
-                localStorage.removeItem(`rpdboss_chapter${this.currentChapter}`);
-            },
+            loadQuestion() {
+                const qIndex = this.startIndex + this.currentIndex;
+                
+                // Boundary check
+                if (qIndex >= questionsData.length) {
+                    this.elements.qText.textContent = "End of available data.";
+                    this.elements.options.innerHTML = "";
+                    this.elements.nextBtn.style.display = 'inline-block';
+                    return;
+                }
 
-            renderQuestion() {
-                const qIndex = (this.currentChapter - 1) * 30 + this.currentQuestionIndex;
-                const qData = questionsData[qIndex];
+                const q = questionsData[qIndex];
+                const totalQ = this.chapterConfig[this.currentChapter].count;
 
-                // Update Progress
-                this.elements.progressTracker.textContent = `Question ${this.currentQuestionIndex + 1}/30`;
+                this.elements.progressTracker.textContent = `Question ${this.currentIndex + 1}/${totalQ}`;
+                this.elements.qText.textContent = q.q;
+                this.elements.feedback.className = 'feedback';
 
-                // Render Text
-                this.elements.questionText.textContent = qData.q;
+                // Shuffle Options
+                let opts = [...q.options];
+                opts.sort(() => Math.random() - 0.5);
 
-                // Render Options
-                this.elements.optionsList.innerHTML = '';
-                qData.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.textContent = opt;
-                    btn.onclick = () => this.handleAnswer(idx, btn);
-                    this.elements.optionsList.appendChild(btn);
-                });
+                // Identify correct answer in the shuffled array
+                const correctAnswerText = q.options[q.a];
+                const correctIndex = opts.indexOf(correctAnswerText);
 
-                // Reset Feedback
-                this.elements.feedbackArea.className = 'feedback-area';
+                this.elements.options.innerHTML = opts.map((opt, i) => 
+                    `<button class="option-btn" onclick="app.check(${i}, ${correctIndex}, this)">${opt}</button>`
+                ).join('');
+
                 this.elements.nextBtn.style.display = 'none';
             },
 
-            handleAnswer(selectedIndex, btnElement) {
-                // Disable all buttons
-                const buttons = this.elements.optionsList.querySelectorAll('.option-btn');
-                buttons.forEach(b => b.disabled = true);
+            check(selected, correct, btn) {
+                const btns = this.elements.options.querySelectorAll('.option-btn');
+                btns.forEach(b => b.disabled = true);
 
-                const qIndexGlobal = (this.currentChapter - 1) * 30 + this.currentQuestionIndex;
-                const correctIndex = questionsData[qIndexGlobal].a;
-                const isCorrect = selectedIndex === correctIndex;
+                const isCorrect = selected === correct;
 
-                if (isCorrect) {
-                    btnElement.classList.add('correct');
+                if(selected === correct) {
+                    btn.classList.add('correct');
                     this.score++;
-                    this.showFeedback(true, "Correct! " + (this.currentQuestionIndex === 29 ? "Perfect finish!" : "Great job!"), questionsData[qIndexGlobal].exp);
+                    this.showFeedback(true, "Correct! Great job!", questionsData[this.startIndex + this.currentIndex].exp);
                 } else {
-                    btnElement.classList.add('wrong');
-                    // Highlight correct one
-                    buttons[correctIndex].classList.add('correct');
-                    this.showFeedback(false, "Incorrect", questionsData[qIndexGlobal].exp);
+                    btn.classList.add('wrong');
+                    btns[correct].classList.add('correct');
+                    this.showFeedback(false, "Incorrect", questionsData[this.startIndex + this.currentIndex].exp);
                 }
-
-                this.userAnswers[this.currentQuestionIndex] = selectedIndex;
-                this.saveProgress();
                 this.elements.nextBtn.style.display = 'inline-block';
             },
 
-            showFeedback(isCorrect, title, explanation) {
-                const area = this.elements.feedbackArea;
-                const titleEl = this.elements.feedbackTitle;
-                const textEl = this.elements.explanationText;
-
-                area.className = `feedback-area show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
-                
-                // Icon
-                const icon = isCorrect ? '✅' : '🛑'; // Hand/Stop icon for wrong as requested
-                titleEl.innerHTML = `<span>${icon}</span> ${title}`;
-                textEl.textContent = explanation;
+            showFeedback(isCorrect, title, text) {
+                const area = this.elements.feedback;
+                area.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+                const icon = isCorrect ? '✅' : '🛑';
+                this.elements.fTitle.innerHTML = `<span>${icon}</span> ${title}`;
+                this.elements.fText.textContent = text;
             },
 
-            nextQuestion() {
-                this.currentQuestionIndex++;
-                if (this.currentQuestionIndex >= 30) {
+            nextQ() {
+                this.currentIndex++;
+                if (this.currentIndex >= this.chapterConfig[this.currentChapter].count) {
                     this.finishChapter();
                 } else {
-                    this.renderQuestion();
+                    this.loadQuestion();
                 }
             },
 
-            saveProgress() {
-                const data = {
-                    lastIndex: this.currentQuestionIndex + (this.elements.nextBtn.style.display === 'inline-block' ? 1 : 0),
-                    completed: false,
-                    score: this.score // Saving current score in case of crash (optional)
-                };
-                localStorage.setItem(`rpdboss_chapter${this.currentChapter}`, JSON.stringify(data));
-            },
-
             finishChapter() {
-                // Mark as complete
-                const data = { lastIndex: 30, completed: true, score: this.score };
-                localStorage.setItem(`rpdboss_chapter${this.currentChapter}`, JSON.stringify(data));
-                
-                this.showResults();
-            },
-
-            showResults() {
                 this.switchView('result');
-                this.elements.homeBtn.style.display = 'none';
-
-                const percent = Math.round((this.score / 30) * 100);
+                this.elements.exitBtn.style.display = 'none';
+                
+                const totalQuestions = this.chapterConfig[this.currentChapter].count;
+                const percent = Math.round((this.score / totalQuestions) * 100);
                 this.elements.finalScore.textContent = `${percent}%`;
                 
-                // Animate circle
                 this.elements.scoreCircle.style.background = `conic-gradient(var(--primary-orange) ${percent}%, #eee ${percent}%)`;
 
-                this.elements.resultDetails.textContent = `You answered ${this.score} out of 30 questions correctly.`;
+                this.elements.resultDetails.textContent = `You answered ${this.score} out of ${totalQuestions} questions correctly.`;
 
                 if (percent >= 80) {
                     this.elements.resultMsg.textContent = "Excellent Work, Boss!";
-                    this.elements.resultMsg.style.color = "var(--success-green)";
+                    this.elements.resultMsg.style.color = "var(--success)";
                 } else if (percent >= 50) {
                     this.elements.resultMsg.textContent = "Good Job!";
                     this.elements.resultMsg.style.color = "var(--primary-orange)";
                 } else {
                     this.elements.resultMsg.textContent = "Keep Practicing!";
-                    this.elements.resultMsg.style.color = "var(--error-red)";
+                    this.elements.resultMsg.style.color = "var(--error)";
                 }
             },
 
             retryChapter() {
-                this.resetChapterState();
                 this.startChapter(this.currentChapter);
             },
 
             goHome() {
                 this.switchView('home');
-                this.elements.homeBtn.style.display = 'none';
-                this.renderChapterList();
+                this.elements.exitBtn.style.display = 'none';
             },
 
-            switchView(viewName) {
+            switchView(view) {
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                if (viewName === 'home') this.elements.homeView.classList.add('active');
-                if (viewName === 'quiz') this.elements.quizView.classList.add('active');
-                if (viewName === 'result') this.elements.resultView.classList.add('active');
+                if (view === 'quiz') {
+                    this.elements.quizView.classList.add('active');
+                    this.elements.exitBtn.style.display = 'block';
+                } else if (view === 'result') {
+                    this.elements.resultView.classList.add('active');
+                } else {
+                    this.elements.homeView.classList.add('active');
+                }
                 window.scrollTo(0,0);
             }
         };
 
-        // Initialize App
-        app.init();
-
+        // Initialize safely
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
     </script>
 </body>
 </html>
