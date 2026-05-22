@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPD MasterBoss - Professional Quiz</title>
+    <style>
+        :root {
+            --primary-orange: #ff6600;
+            --primary-orange-hover: #e65c00;
+            --bg-gray: #f4f6f8;
+            --card-white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --success-green: #28a745;
+            --error-red: #dc3545;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--card-white);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--primary-orange);
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            padding: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Screen (Chapter Selection) */
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .chapter-card {
+            background: var(--card-white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            border-left-color: var(--primary-orange);
+        }
+
+        .chapter-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .chapter-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar-container {
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: auto;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: #eee;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .status-badge.completed {
+            background: var(--success-green);
+            color: white;
+        }
+
+        /* Quiz Screen */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            color: var(--primary-orange);
+        }
+
+        .question-card {
+            background: var(--card-white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-dark);
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-orange);
+            background: #fff8f2;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-green);
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--error-red);
+            background: #f8d7da;
+            color: #721c24;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        .feedback-area {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-area.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-area.correct-fb {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--success-green);
+        }
+
+        .feedback-area.wrong-fb {
+            background-color: #fdecea;
+            border-left: 4px solid var(--error-red);
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .explanation-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        /* Next Button */
+        .next-btn-container {
+            text-align: center;
+            margin-top: 2rem;
+            height: 60px; /* Placeholder space */
+        }
+
+        .next-btn {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 0.8rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
+            transition: var(--transition);
+            display: none; /* Hidden until answered */
+        }
+
+        .next-btn:hover {
+            background: var(--primary-orange-hover);
+            transform: scale(1.05);
+        }
+
+        /* Results Screen */
+        .result-card {
+            background: var(--card-white);
+            text-align: center;
+            padding: 3rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-orange) 0%, #eee 0%);
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-inner {
+            width: 130px;
+            height: 130px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-orange);
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .result-msg {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .action-btn {
+            background: var(--text-dark);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background: #000;
+            transform: translateY(-2px);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--text-dark);
+            color: var(--text-dark);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: auto;
+        }
+
+        footer strong {
+            color: var(--primary-orange);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .question-card {
+                padding: 1.5rem;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .option-btn {
+                font-size: 0.95rem;
+                padding: 0.9rem;
+            }
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">RPD <span>MasterBoss</span></div>
+        <button id="homeBtn" class="action-btn secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; display: none;">Home</button>
+    </header>
+
+    <main id="app">
+        <!-- Home Screen -->
+        <div id="homeView" class="view active">
+            <h2>Select a Chapter</h2>
+            <p style="color: #666; margin-bottom: 1rem;">Professional RPD Training. Progress is saved automatically.</p>
+            <div class="chapter-grid" id="chapterList">
+                <!-- Chapters injected by JS -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizView" class="view">
+            <div class="quiz-header">
+                <button class="action-btn secondary" onclick="app.goHome()" style="margin:0; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Exit</button>
+                <div class="progress-text" id="progressTracker">Question 1/30</div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text" id="questionText">Loading...</div>
+                <div class="options-list" id="optionsList">
+                    <!-- Options injected by JS -->
+                </div>
+                
+                <div class="feedback-area" id="feedbackArea">
+                    <div class="feedback-title" id="feedbackTitle"></div>
+                    <div class="explanation-text" id="explanationText"></div>
+                </div>
+            </div>
+
+            <div class="next-btn-container">
+                <button class="next-btn" id="nextBtn">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="resultView" class="view">
+            <div class="result-card">
+                <div class="score-circle" id="scoreCircle">
+                    <div class="score-inner">
+                        <div class="score-number" id="finalScore">0%</div>
+                        <div class="score-label">Accuracy</div>
+                    </div>
+                </div>
+                <h2 class="result-msg" id="resultMessage">Great Job!</h2>
+                <p style="margin-bottom: 2rem; color: #666;" id="resultDetails">You answered X out of Y correctly.</p>
+                
+                <button class="action-btn" onclick="app.retryChapter()">Retake Chapter</button>
+                <button class="action-btn secondary" onclick="app.goHome()">Back to Chapters</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        This website was designed by <strong>The Boss</strong>
+    </footer>
+
+    <script>
+        // --- DATA: 240 Questions ---
+        // Mapped from user input. A=0, B=1, C=2, D=3.
+        const questionsData = [
+            // Chapter 1
+            {q: "Which principle is defined as the ability of the prosthesis to resist vertical tissue-ward forces?", options: ["Retention", "Support", "Stability", "Reciprocation"], a: 1, exp: "Support is the resistance to movement toward the tissues, primarily provided by rests and the denture base."},
+            {q: "According to DeVan (1952), what is the priority in RPD construction?", options: ["Replacing what is lost", "Maximum esthetics", "Preservation of that which remains", "Increasing masticatory force"], a: 2, exp: "The primary objective is to preserve remaining teeth and bone rather than just replacing missing structures."},
+            {q: "Which sound is most likely to be impaired if anterior teeth are lost without replacement?", options: ["P and B", "F and V", "S and Z", "M and N"], a: 1, exp: "Dentolabial sounds like F and V require contact between the lower lip and upper incisors."},
+            {q: "Which material is mandatory for a primary impression in a partially edentulous patient?", options: ["Impression plaster", "Elastic material (e.g., Alginate)", "Non-elastic compound", "Zinc oxide eugenol"], a: 1, exp: "Elastic materials are required to record the undercuts of the remaining natural teeth without distortion."},
+            {q: "A 'transitional' RPD is specifically used when:", options: ["The patient is young", "Additional teeth are expected to be extracted soon", "The patient has no money", "High esthetics are required"], a: 1, exp: "Transitional dentures are designed to have teeth added to them as the remaining teeth are lost."},
+            {q: "Overclosure and protrusion of the mandible are common sequelae of:", options: ["Excessive support", "Tooth extraction without replacement", "High caries index", "Using a metal framework"], a: 1, exp: "Loss of posterior support leads to a collapse of the vertical dimension and a forward shift of the mandible."},
+            {q: "The primary function of a 'Rest' in an RPD assembly is:", options: ["To provide retention", "To provide support and maintain the clasp position", "To improve esthetics", "To allow movement"], a: 1, exp: "Rests are rigid components that prevent the denture from sinking into the gums."},
+            {q: "Which of the following is a 'Clinical' step in RPD construction?", options: ["Pouring the master cast", "Mouth preparation", "Casting the metal framework", "Duplicating the cast"], a: 1, exp: "Mouth preparation (e.g., rest seat preparation) is performed by the dentist on the patient."},
+            {q: "In the terminology of RPD, a 'Bounded' edentulous area is defined as:", options: ["Missing all teeth", "Having an abutment tooth at each end of the space", "Missing teeth on one side only", "Having no posterior abutment"], a: 1, exp: "A bounded space is limited by teeth on both the mesial and distal sides."},
+            {q: "What is the first step in the laboratory procedure after receiving the primary impression?", options: ["Designing the framework", "Pouring the study cast", "Waxing the pattern", "Final impression"], a: 1, exp: "The study cast is the foundation for diagnosis and the preliminary design."},
+            {q: "Which treatment option is contraindicated when oral hygiene is poor and the caries index is high?", options: ["Complete denture", "Removable Partial Denture", "Extraction", "Scaling"], a: 1, exp: "RPDs can trap plaque; if hygiene is poor, it will lead to rapid destruction of the remaining teeth."},
+            {q: "The ability of the prosthesis to resist displacement by horizontal or rotational forces is:", options: ["Support", "Retention", "Stability", "Bracing"], a: 2, exp: "Stability keeps the denture from rocking or shifting during function."},
+            {q: "An 'Abutment' is defined as:", options: ["A missing tooth", "A tooth that serves to support or retain a prosthesis", "The metal framework", "The artificial tooth"], a: 1, exp: "Abutments are the natural teeth used as pillars for the RPD."},
+            {q: "What is the main function of the 'Study Cast Analysis'?", options: ["Final tooth selection", "Identifying occlusal interferences and planning mouth preparation", "Packing the acrylic", "Delivering the denture"], a: 1, exp: "It allows the dentist to see problems (like tilted teeth) and plan corrections before the final impression."},
+            {q: "A patient with a complete set of natural teeth is described as:", options: ["Edentulous", "Partially edentulous", "Dentulous", "Prosthetic"], a: 2, exp: "Dentulous means having teeth; edentulous means missing them."},
+            {q: "Which component connects the major connector to the rest and clasps?", options: ["Denture base", "Minor connector", "Artificial teeth", "Retainer"], a: 1, exp: "The minor connector acts as the bridge between the large connector and the smaller parts."},
+            {q: "A 'Distal Extension' saddle is another name for:", options: ["Bounded space", "Free-end edentulous area", "Class III gap", "Fixed bridge"], a: 1, exp: "It refers to areas where there is no tooth posterior to the gap."},
+            {q: "Why is a 'Special Tray' used in the final impression?", options: ["To save material", "To obtain a more accurate master cast", "To make the patient more comfortable", "To replace the metal framework"], a: 1, exp: "Special trays provide a uniform thickness of material, reducing distortion."},
+            {q: "Drifting and rotation of teeth are results of:", options: ["Over-brushing", "Failure to replace missing teeth", "High fluoride intake", "Using a surveyor"], a: 1, exp: "Teeth migrate toward empty spaces if not blocked by a prosthesis."},
+            {q: "Which prosthesis cannot be removed by the patient?", options: ["Conventional RPD", "Fixed Partial Denture (Bridge)", "Interim Partial Denture", "Transitional Denture"], a: 1, exp: "Fixed prostheses are cemented or screwed permanently to the teeth or implants."},
+            {q: "The 'Interim' partial denture is usually used:", options: ["For 10 years", "Immediately after extraction during the healing period", "Only for elderly patients", "To replace molars only"], a: 1, exp: "It is a short-term temporary solution for esthetics and function."},
+            {q: "What determines the choice between an RPD and an FPD?", options: ["Length of the edentulous span and health of abutments", "The color of the gums", "The patient's height", "The type of toothpaste used"], a: 0, exp: "Long spans or weak abutments often require an RPD rather than a bridge."},
+            {q: "'Mouth Preparation' includes which of the following?", options: ["Polishing the denture", "Preparing rest seats and guide planes", "Setting the teeth in wax", "Casting the alloy"], a: 1, exp: "These are clinical modifications made to natural teeth to receive the RPD components."},
+            {q: "In the 'Laboratory Step 20', what is performed?", options: ["Delivery and Adjustment", "Finishing and Polishing", "Pouring the cast", "Surveying"], a: 1, exp: "Laboratory work ends with polishing the finished prosthesis."},
+            {q: "Preserving the 'Tongue Space' is an objective of RPD to avoid:", options: ["Tooth decay", "Speech problems and discomfort", "Gingival bleeding", "Bone growth"], a: 1, exp: "A bulky RPD can restrict the tongue, causing a 'lisp' or 'discomfort'."},
+            {q: "Which classification system is most universally accepted for RPD?", options: ["Angle’s Classification", "Kennedy Classification", "Miller’s Classification", "G.V. Black’s"], a: 1, exp: "Kennedy is the standard for partially edentulous arches."},
+            {q: "A 'Secondary' lab step like 'Beading the Master Cast' is done to:", options: ["Make it look shiny", "Ensure a positive contact between the metal and the tissues", "Increase the weight", "Measure the undercut"], a: 1, exp: "Beading (grooving the cast) creates a seal for the maxillary major connector."},
+            {q: "'Jaw Relation Record' is necessary to:", options: ["Measure the tooth size", "Mount the casts on the articulator in the correct bite", "Choose the clasp", "Clean the tray"], a: 1, exp: "It records how the upper and lower jaws relate in 3D space."},
+            {q: "Treatment with RPD is indicated for young patients because:", options: ["It is cheap", "Fixed bridges might damage large pulp chambers in young teeth", "They like to play with it", "Their bone is very hard"], a: 1, exp: "RPDs are more conservative for young patients whose teeth are still maturing."},
+            {q: "Psychological comfort is improved by RPD through:", options: ["Changing the saliva flow", "Restoring appearance and self-confidence", "Hardening the enamel", "Reducing blood pressure"], a: 1, exp: "Missing teeth often cause social anxiety; RPDs restore the smile."},
+
+            // Chapter 2
+            {q: "A patient is missing all lower molars on both sides. All other teeth are present. This is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 0, exp: "Bilateral posterior free-end edentulous areas are Class I."},
+            {q: "If a patient is missing lower molars on the right side only, it is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 1, exp: "Unilateral posterior free-end area is Class II."},
+            {q: "A single gap between the canine and second molar on one side is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 2, exp: "A unilateral bounded space is Class III."},
+            {q: "According to Applegate’s Rule 5, what determines the primary classification?", options: ["The most anterior area", "The most posterior edentulous area", "The number of missing teeth", "The thickness of the ridge"], a: 1, exp: "We always look at the farthest space back in the mouth first."},
+            {q: "If the Third Molar is missing and NOT to be replaced, it is:", options: ["Counted as Class I", "Not considered in the classification (Rule 2)", "Considered a modification", "Extracted immediately"], a: 1, exp: "If we don't need to replace it, it doesn't affect the arch's classification."},
+            {q: "Applegate’s Rule 8 states that which class can NOT have a modification?", options: ["Class I", "Class II", "Class III", "Class IV"], a: 3, exp: "If another gap exists in Class IV, that gap must be posterior, making it Class I, II, or III."},
+            {q: "A patient is Class II with an additional gap on the opposite side. This is called:", options: ["Class II Mod 1", "Class I", "Class III Mod 1", "Class IV"], a: 0, exp: "The additional space is a 'Modification' (Rule 6)."},
+            {q: "In counting modifications (Rule 7), what is considered?", options: ["The number of missing teeth", "The number of additional edentulous areas", "The length of the space", "The color of the abutments"], a: 1, exp: "It doesn't matter if 1 or 3 teeth are missing in a gap; it counts as one modification."},
+            {q: "Classification should be done AFTER any necessary extractions. This is:", options: ["Rule 1", "Rule 3", "Rule 5", "Rule 8"], a: 0, exp: "Extractions change the edentulous status and thus the classification."},
+            {q: "A patient is missing #1, #2, #3, #14, #15, #16 (Third and second molars). If they are to be replaced, this is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 0, exp: "Bilateral posterior loss is Class I."},
+            {q: "If the third molar is present and used as an abutment, it IS considered. This is:", options: ["Rule 2", "Rule 3", "Rule 4", "Rule 6"], a: 1, exp: "Its presence as an abutment changes a free-end to a bounded space."},
+            {q: "A 'Free-end' edentulous area is found in which classes?", options: ["Classes I and II", "Classes III and IV", "Class I only", "Class IV only"], a: 0, exp: "These classes end with a gap that has no tooth behind it."},
+            {q: "Which class is the 'Most Stable' because it is entirely tooth-supported?", options: ["Class I", "Class II", "Class III", "Class IV"], a: 2, exp: "Class III is bounded by teeth on both sides, providing excellent stability."},
+            {q: "A single anterior edentulous area that crosses the midline is:", options: ["Class I", "Class II", "Class III", "Class IV"], a: 3, exp: "Class IV must cross the midline and be anterior to remaining teeth."},
+            {q: "If the second molar is missing and NOT to be replaced, we apply:", options: ["Rule 1", "Rule 4", "Rule 5", "Rule 8"], a: 1, exp: "Rule 4 is the counterpart to Rule 2 for second molars."},
+            {q: "How many edentulous areas are present in a 'Class III Mod 2' case?", options: ["1", "2", "3", "5"], a: 2, exp: "1 primary area + 2 modifications = 3 total spaces."},
+            {q: "A patient missing all incisors (#7, 8, 9, 10) and the right first molar (#3) is classified as:", options: ["Class IV Mod 1", "Class III Mod 1", "Class II Mod 1", "Class I"], a: 2, exp: "Rule 5: Most posterior area (#3) determines the class (Class II). The anterior gap is Mod 1."},
+            {q: "Applegate’s rules were created primarily because:", options: ["Kennedy was wrong", "To handle complexities like missing molars and multiple gaps", "To make dentistry harder", "To sell more books"], a: 1, exp: "Kennedy's basic system needed specific rules for clinical consistency."},
+            {q: "If a patient is missing only the four lower premolars, this is:", options: ["Class I", "Class III Mod 1", "Class IV", "Class II"], a: 1, exp: "Two separate bounded gaps on y-axis = Class III (primary) + Mod 1."},
+            {q: "Which rule says 'Extent of modification is not considered'?", options: ["Rule 4", "Rule 6", "Rule 7", "Rule 8"], a: 2, exp: "Size doesn't matter for modification count."},
+            {q: "In a Class I Mod 1 case, how many free-end saddles are there?", options: ["1", "2", "3", "0"], a: 1, exp: "Class I always has 2 free-ends; the mod must be a bounded space."},
+            {q: "A 'Bounded Saddle' is the hallmark of:", options: ["Class I", "Class II", "Class III", "Class IV (if only anterior)"], a: 2, exp: "Bounded by teeth at both ends."},
+            {q: "Why is Class IV considered 'Anterior'?", options: ["It uses white teeth", "The missing teeth are in front of the remaining teeth", "It's for young people", "It only involves canines"], a: 1, exp: "Position relative to natural teeth."},
+            {q: "True or False: A Class III case can have 4 modification spaces.", options: ["True", "False"], a: 0, exp: "Modifications are counted by the number of extra spaces, regardless of how many."},
+            {q: "If all teeth except the lower canines are missing, this is:", options: ["Class I", "Class IV", "Class III", "Class II"], a: 0, exp: "Bilateral posterior extension from the canines."},
+            {q: "The 'Step-by-Step Trick' to classify is to look at:", options: ["The front teeth", "The most posterior space", "The patient's age", "The tongue"], a: 1, exp: "Always identify the most posterior gap first to name the class."},
+            {q: "If a patient has a bounded gap on the left and a free-end on the right, it is:", options: ["Class II Mod 1", "Class I Mod 1", "Class III Mod 1", "Class IV"], a: 0, exp: "Most posterior is the right free-end (Class II), left gap is Mod 1."},
+            {q: "Applegate's Rule 8 prohibits mods in Class IV because:", options: ["Anterior teeth are weak", "A posterior gap would dominate the classification", "Class IV is too small", "It's a rule of thumb"], a: 1, exp: "Posterior gaps take precedence in the Kennedy system."},
+            {q: "Modification spaces are designated by:", options: ["Letters (A, B, C)", "Numbers (1, 2, 3)", "Roman numerals", "Tooth names"], a: 1, exp: "e.g., Class I Modification 1."},
+            {q: "Professional Insight: Which class requires the most complex 'Stress-breaker' design?", options: ["Class I", "Class II", "Class III", "Class IV"], a: 0, exp: "Class I has two free-ends, creating the most rotation and stress on abutments."},
+
+            // Chapter 3
+            {q: "'Support' is the resistance of the denture to movement in which direction?", options: ["Away from tissues", "Toward oral tissues", "Horizontally", "Mesially"], a: 1, exp: "It prevents the denture from sinking and damaging the mucosa."},
+            {q: "A partial denture WITHOUT occlusal rests is clinically known as a:", options: ["Fixed bridge", "Gum stripper", "Tooth-borne RPD", "Overdenture"], a: 1, exp: "Without rests, occlusal forces push the denture directly into the gums, causing recession and bone loss."},
+            {q: "The angle formed between the minor connector and the occlusal rest should be:", options: ["Exactly 90 degrees", "More than 90 degrees", "Less than 90 degrees (Acute angle)", "180 degrees"], a: 2, exp: "An acute angle ensures forces are directed down the long axis of the tooth and prevents 'slippage'."},
+            {q: "For an 'Extension Base' (Class I or II), the rest seat should ideally be:", options: ["Box-shaped", "Saucer-shaped / Spoon-shaped", "Deep and narrow", "Sharp-angled"], a: 1, exp: "A saucer shape allows for a small amount of rotation (hinge movement) without damaging the tooth."},
+            {q: "Which bur is used to create a 'Positive' seat for a Cingulum Rest?", options: ["Large round bur", "Inverted cone bur", "Fissure bur", "Diamond disc"], a: 1, exp: "The inverted cone creates a distinct step/ledge that 'locks' the rest in place."},
+            {q: "In 'Mixed Support' (Class I/II), support is provided by:", options: ["Teeth only", "Tissues only", "Both tooth periodontal ligaments and residual ridge mucosa", "Saliva surface tension"], a: 2, exp: "Dual support is necessary because the extension base rests on compressible tissue."},
+            {q: "The primary function of an Occlusal Rest is:", options: ["Retention", "Vertical support and transmission of stress to the long axis", "Esthetics", "Prevention of caries"], a: 1, exp: "It is the 'pillar' that holds the weight of the denture on the teeth."},
+            {q: "What is the minimum thickness required for an occlusal rest at the marginal ridge?", options: ["0.5 mm", "1.25 mm to 1.5 mm", "3 mm", "5 mm"], a: 1, exp: "Sufficient bulk is needed to prevent the metal from distorting or breaking under bite pressure."},
+            {q: "A 'Cingulum Rest' is preferable to an 'Incisal Rest' because:", options: ["It is cheaper", "It is closer to the center of rotation and more esthetic", "It is easier to clean", "It provides more retention"], a: 1, exp: "Placing the rest lower on the tooth (cingulum) reduces the tipping force (leverage)."},
+            {q: "Which tooth is the BEST choice for an anterior rest?", options: ["Lower central incisor", "Maxillary canine", "Upper lateral incisor", "Mandibular lateral incisor"], a: 1, exp: "The canine has a thick cingulum and a strong root to support the load."},
+            {q: "When preparing a rest on an 'Existing PFM Crown,' you must use:", options: ["Steel round bur", "Diamond bur only", "Carbide bur", "Polishing brush"], a: 1, exp: "Only diamonds can cut the porcelain cleanly without fracturing it or ruining the bur."},
+            {q: "A 'Positive Rest Seat' means:", options: ["The patient likes it", "It is deeper in the center than at the marginal ridge", "it is flat", "It has no undercuts"], a: 1, exp: "This shape ensures the rest stays 'seated' and doesn't slide out toward the cheek."},
+            {q: "Why do we use 'Baseplate Wax' intraorally during rest preparation?", options: ["To clean the tooth", "To verify if there is enough space (thickness) for the rest in occlusion", "To take a final impression", "To choose the tooth color"], a: 1, exp: "Biting on the wax shows the thickness of the 'prep' to ensure it's at least 1.25mm."},
+            {q: "The floor of a posterior occlusal rest should be:", options: ["Inclined buccally", "Concave and inclined apically toward the center of the tooth", "Convex", "Perfectly flat"], a: 1, exp: "This directs forces toward the middle of the tooth root."},
+            {q: "'On-lays' (Occlusal Restorations) in RPD serve to:", options: ["Replace missing front teeth", "Restore Vertical Dimension of Occlusion (VDO) and act as enlarged rests", "Hide the metal", "Measure the bone"], a: 1, exp: "Used when teeth are severely worn down to restore the bite height."},
+            {q: "Incisal rests are generally avoided because they:", options: ["Are too expensive", "Are unesthetic and cause undesirable tipping of the tooth", "Don't provide support", "Are too small"], a: 1, exp: "They are visible in the smile and push the tooth over due to their high position."},
+            {q: "Which bur is used for preparing posterior rest seats?", options: ["#4, #6, or #8 Round burs", "Small flame bur", "Tapered fissure bur", "Wheel bur"], a: 0, exp: "Round burs create the concave 'spoon' shape needed for posterior rests."},
+            {q: "What is an 'Extended Occlusal Rest' used for?", options: ["To reach the front teeth", "For severely tipped molars to direct force down the long axis", "To increase retention", "To replace a molar"], a: 1, exp: "It covers more than half the tooth width to center the load on a muddled molar."},
+            {q: "Before starting rest preparation, what is the first clinical step?", options: ["Anesthesia", "Mark existing occlusal contacts with articulating paper", "Take an Alginate impression", "Polish the teeth"], a: 1, exp: "You must know where the patient currently bites to avoid destroying important 'centric' contacts."},
+            {q: "'Indirect Retention' is often provided by rests located:", options: ["As far as possible from the fulcrum line", "Right on the fulcrum line", "Behind the missing teeth", "In the vestibule"], a: 0, exp: "Placing them far away creates a longer lever arm to resist rotation."},
+            {q: "Why must the junction between the rest and minor connector be rounded?", options: ["To look better", "To reduce stress concentration and prevent fracture", "To save metal", "To make it flexible"], a: 1, exp: "Sharp corners are points where metal is most likely to snap."},
+            {q: "'Telescopic Crowns' provide which type of support?", options: ["Mucosal bearing", "Periodontal (Tooth) support", "No support", "Mixed support"], a: 1, exp: "They fit over a prepared tooth, transferring all load to the root."},
+            {q: "In Class I and II cases, rests are usually placed on the:", options: ["Distal side of the abutment", "Mesial side of the abutment", "Buccal surface", "Lingual surface"], a: 1, exp: "Placing them 'away' from the gap (Mesial) reduces the damaging 'torque' on the tooth."},
+            {q: "'Slippage' of the rest occurs if the angle with the minor connector is:", options: ["Acute", "90 degrees or more (Obtuse)", "Rounded", "Concave"], a: 1, exp: "If the seat is flat or sloped outward, the rest will slide out under pressure."},
+            {q: "'Inverted Cone Burs' are specifically used in which prep?", options: ["Posterior rest", "Cingulum rest ledge", "Incisal rest", "Proximal plate"], a: 1, exp: "It carves the flat ledge/step on the back of the canine."},
+            {q: "For an incisal rest, preparation involves how many planes?", options: ["One", "Two (Incisal and Labial)", "Three", "Zero"], a: 1, exp: "It must follow the tooth's edge and wrap slightly over the front."},
+            {q: "The width of an incisal rest prep should be:", options: ["1/10 of the width", "1/3 of the mesio-distal incisal width", "The whole edge", "5 mm"], a: 1, exp: "Standard measurement for a balanced and strong rest."},
+            {q: "If canines are missing, lingual rests are prepared on:", options: ["Only one incisor", "Multiple anterior teeth to share the load", "The cheek", "The molars"], a: 1, exp: "Sharing the load is necessary because incisors have smaller roots."},
+            {q: "What is a 'Finger Rest'?", options: ["A rest for the dentist's hand", "A small rigid extension contacting the incisal edge, usually on lower teeth", "A plastic rest", "A type of clasp"], a: 1, exp: "It is a small auxiliary rest used for stabilization."},
+            {q: "Professional Tip: 'Torque' on an abutment tooth is minimized by:", options: ["Using more clasps", "Placing mesial rests and using a saucer-shaped seat in extension cases", "Removing the rest", "Using a gold alloy"], a: 1, exp: "Proper placement and shape allow for stress-breaking movement."},
+
+            // Chapter 4
+            {q: "A 'Direct Retainer' prevents dislodgment of the prosthesis in which direction?", options: ["Toward the tissues", "Away from the tissues (occlusally)", "Mesially", "Lingually"], a: 1, exp: "It 'hooks' the teeth to keep the denture from falling or lifting."},
+            {q: "Which part of the clasp assembly is responsible for 'Support'?", options: ["Retentive arm", "Reciprocal arm", "Occlusal rest", "Minor connector"], a: 2, exp: "Rests are the only parts designed to resist vertical pressure."},
+            {q: "'Retention' is provided by the clasp tip engaging the:", options: ["Height of contour", "Occlusal surface", "Undercut area (Gingival to the survey line)", "Minor connector"], a: 2, exp: "It must sit 'below' the widest part of the tooth to lock in place."},
+            {q: "The 'Reciprocal Arm' must be placed on the tooth:", options: ["Below the survey line", "On or above the survey line (Height of contour)", "On the gums", "Under the rest"], a: 1, exp: "It must be rigid and NOT engage an undercut to perform its function."},
+            {q: "'Reciprocation' is necessary to:", options: ["Make the clasp look nice", "Counteract the lateral forces exerted by the retentive tip as it passes the survey line", "Increase the weight", "Reduce costs"], a: 1, exp: "Without a rigid arm on the other side, the retentive tip would push and move the tooth."},
+            {q: "An 'Intracoronal Attachment' is placed:", options: ["Outside the tooth", "Within the normal contour of the abutment crown", "On the gums", "Under the bone"], a: 1, exp: "'Intra' means inside; it is hidden within a crown."},
+            {q: "'Passivity' of a clasp means it should exert force on the tooth:", options: ["All the time", "Only when the denture is being moved or seated", "Never", "During sleep only"], a: 1, exp: "A properly seated RPD should apply zero pressure to teeth at rest."},
+            {q: "A clasp must cover more than ____ degrees of the tooth circumference to ensure 'Encirclement'.", options: ["90", "180", "360", "45"], a: 1, exp: "To prevent the tooth from 'escaping' the clasp assembly during function."},
+            {q: "Which factor INCREASES the flexibility of a clasp arm?", options: ["Increasing its diameter (making it thicker)", "Increasing its length", "Making it half-round in cross-section", "Using Chrome-Cobalt instead of Gold"], a: 1, exp: "Longer arms act like longer levers and bend more easily."},
+            {q: "'Wrought Wire' clasps are more flexible than 'Cast' clasps because:", options: ["They are made of gold", "Their internal grain structure is fibrous and longitudinal", "They are thinner", "They are glued on"], a: 1, exp: "The manufacturing process makes the wire 'springy' and tough."},
+            {q: "'Area Contact' with the tooth is found in:", options: ["Round clasps", "Half-round or plate-type clasps", "Roach bar clasps", "Wrought wire"], a: 1, exp: "Flat surfaces touch a larger area of the tooth."},
+            {q: "What is the primary disadvantage of 'Extra-coronal Attachments'?", options: ["They are invisible", "They cause food stagnation and excessive loading on the abutment", "They are cheap", "They are too small"], a: 1, exp: "Being outside the tooth, they create a larger lever arm that can hurt the tooth."},
+            {q: "A 'Point Contact' is characteristic of which clasp?", options: ["Aker's", "Roach (Bar-type)", "Wrought wire", "Lingual plate"], a: 1, exp: "Only the tiny tip of the bar clasp touches the tooth."},
+            {q: "The 'Survey Line' (Height of Contour) is:", options: ["The bottom of the tooth", "The line of maximum convexity of the tooth", "The gingival margin", "The incisal edge"], a: 1, exp: "It's the 'equator' that divides the tooth into undercut and non-undercut."},
+            {q: "'Bracing' is the resistance to movement in the:", options: ["Vertical direction", "Horizontal or lateral direction", "Away from tissues", "Occlusal direction"], a: 1, exp: "Rigid arms and connectors 'brace' against the sides of the teeth."},
+            {q: "Which clasp type approaches the undercut from the 'Occlusal' direction?", options: ["Infra-bulge", "Supra-bulge (e.g., Aker's)", "I-Bar", "T-Bar"], a: 1, exp: "These clasps start high and go down toward the undercut."},
+            {q: "What happens if a clasp tip is placed TOO DEEP in an undercut?", options: ["It won't stay in", "It will be impossible to remove or may damage the tooth/metal", "It becomes more flexible", "It improves esthetics"], a: 1, exp: "Too much retention makes the denture a 'permanent' one by mistake."},
+            {q: "'Precision Attachments' are often called:", options: ["Gum strippers", "Male and Female (Patrix and Matrix) components", "Hooks", "Wires"], a: 1, exp: "They rely on two interlocking parts for high-accuracy fit."},
+            {q: "Which metal is 'More Rigid,' requiring thinner clasp arms to work?", options: ["Gold", "Chrome-Cobalt", "Aluminum", "Copper"], a: 1, exp: "It has a higher modulus of elasticity than gold, making it stiffer."},
+            {q: "'Tapering' a clasp arm towards its tip:", options: ["Makes it break easier", "Increases its flexibility at the tip where it's needed", "Makes it heavier", "Is done for esthetics only"], a: 1, exp: "Tapering allows the 'tail' to move more while the 'body' stays rigid."},
+            {q: "The 'Passivity' of the framework is tested when the RPD is:", options: ["Halfway in", "Fully seated in the mouth", "Out of the mouth", "Under the tongue"], a: 1, exp: "It must feel 'dead' and exert no pressure when at rest."},
+            {q: "A 'Combination Clasp' uses which two materials?", options: ["Plastic and Metal", "Cast metal reciprocal arm and Wrought wire retentive arm", "Steel and Gold", "Ceramic and Metal"], a: 1, exp: "This gives the benefit of rigidity (for bracing) and flexibility (for retention)."},
+            {q: "Why are lower incisors and upper lateral incisors avoided for clasping?", options: ["They are too big", "They have small roots and offer poor support/retention", "They are too white", "They have no undercuts"], a: 1, exp: "They are weak 'anchors' that can be easily pulled out."},
+            {q: "In 'Clasping Order,' which teeth are the best abutments?", options: ["Molars", "Premolars", "Canines", "Incisors"], a: 0, exp: "Molars have the largest surface area and strongest root support."},
+            {q: "A 'Line Contact' is characteristic of:", options: ["Plate clasps", "Round (Wrought wire) clasps", "Cast half-round clasps", "Major connectors"], a: 1, exp: "A round wire only touches the tooth along a thin line."},
+            {q: "'Frictional Fit' is a mean of retention used in:", options: ["Alginate", "Attachments and parallel guide planes", "Sticky food", "Suction"], a: 1, exp: "Snug fitting parts hold each other through friction."},
+            {q: "Which survey line type is characterized by a 'High' line?", options: ["Blatterfein Type 3", "Blatterfein Type 1", "Diagonal line", "Low line"], a: 0, exp: "High survey lines mean there is a large undercut near the occlusal."},
+            {q: "'Encirclement' protects the tooth from:", options: ["Decay", "Moving out of the clasp assembly during function", "Sensitivity", "Staining"], a: 1, exp: "It 'traps' the tooth so the clasp doesn't just slide off."},
+            {q: "If the 'Straight line joining two clasps' bisects the denture, the design is:", options: ["Unstable", "Balanced and ideal", "Too heavy", "Illegal"], a: 1, exp: "Centering the retention points provides the most stability."},
+            {q: "Professional Tip: 'Gravity' helps with retention in:", options: ["Upper dentures", "Lower dentures", "Both", "Neither"], a: 1, exp: "The weight of the lower denture helps it stay 'down' on the ridge."},
+
+            // Chapter 5
+            {q: "The 'Aker's Clasp' (Circumferential) is the 'Classic' choice for:", options: ["Free-end saddles", "Bounded edentulous areas (Tooth-borne)", "Anterior teeth", "Mobile teeth"], a: 1, exp: "It is the go-to design for spaces surrounded by solid teeth."},
+            {q: "An 'Extended Clasp' is used when:", options: ["The adjacent tooth has a good undercut", "The adjacent tooth has NO suitable undercut, so we reach for a farther tooth", "The patient has a big mouth", "To replace all molars"], a: 1, exp: "It 'walks' across teeth to find a usable retention area."},
+            {q: "The 'RPI System' was designed specifically for:", options: ["Class III", "Class IV", "Distal Extension (Class I and II) to reduce stress on abutments", "Fixed bridges"], a: 2, exp: "It uses a mesial rest to change the fulcrum and move the clasp 'away' from the tooth during load."},
+            {q: "In the RPI system, 'I' stands for:", options: ["Indirect retainer", "Incisal rest", "I-Bar clasp", "Internal finish line"], a: 2, exp: "The I-bar is a gingivally approaching clasp that provides the retention."},
+            {q: "'Indirect Retention' is essential to prevent:", options: ["Tooth decay", "Rotation of the extension base around the fulcrum line", "Allergic reactions", "Breaking the metal"], a: 1, exp: "It stops the 'heave' of the free-end saddle away from the gums."},
+            {q: "The 'Fulcrum Line' is an imaginary line connecting:", options: ["The front teeth", "The principal occlusal rests", "The cheeks", "The tongue"], a: 1, exp: "It is the axis of rotation for the partial denture."},
+            {q: "'Infra-bulge' clasps are highly 'Esthetic' because:", options: ["They are painted white", "They are hidden under the lip and approach from the gingiva", "They are made of gold", "They are very thin"], a: 1, exp: "Less metal is visible on the tooth surface compared to Aker's."},
+            {q: "'I-Bars' are contraindicated (should not be used) when there is:", options: ["A deep tissue undercut or high frenal attachment", "A big tooth", "A mesial rest", "A metal base"], a: 0, exp: "The bar would jam into the tissue or get caught in the frenum."},
+            {q: "Which clasp is best for a 'Severely Tilted' isolated molar?", options: ["Aker's", "Ring Clasp", "I-Bar", "Double Aker"], a: 1, exp: "It wraps almost 360 degrees to find retention on a difficult tooth."},
+            {q: "'Double Akers' (Embrasure Clasp) is commonly used in:", options: ["Class I", "Class IV on the posterior teeth for stabilization", "Single tooth loss", "Temporary dentures"], a: 1, exp: "It provides retention on the 'non-edentulous' side of the mouth."},
+            {q: "The 'Tripping Action' (Push-type) of bar clasps provides:", options: ["Lower retention", "Higher retention compared to pull-type clasps", "Less bracing", "More comfort"], a: 1, exp: "It's harder to 'push' a tip over an undercut than to 'pull' it."},
+            {q: "A 'Reverse-Action' Clasp (C-clasp) is chosen when:", options: ["There is an undercut near the minor connector", "There is no undercut", "Esthetics is priority", "To replace incisors"], a: 0, exp: "It loops back on itself to reach an undercut that's 'behind' its origin."},
+            {q: "'Indirect Retainers' should be placed:", options: ["Right next to the saddle", "As far as possible from the fulcrum line", "Under the tongue", "Only on molars"], a: 1, exp: "A longer lever arm makes the retainer more effective at stopping rotation."},
+            {q: "In the 'RPA' system, the 'A' stands for:", options: ["Anterior rest", "Aker’s clasp", "Artificial teeth", "Alginate"], a: 1, exp: "Used as an alternative to RPI when an I-bar cannot be placed due to tissue undercuts."},
+            {q: "The 'Back-action Clasp' is a modification of the:", options: ["Aker's clasp", "Ring clasp", "I-Bar", "T-Bar"], a: 1, exp: "It is used for tilted molars but is rarely used due to poor stress distribution."},
+            {q: "'Modified T-bar' or 'L-bar' are used in free-end cases to:", options: ["Look better", "Protect the abutment tooth from being 'pulled' backwards", "Increase bracing", "Save metal"], a: 1, exp: "They provide a more favorable stress direction."},
+            {q: "What is a major disadvantage of 'Ring Clasps'?", options: ["They are too small", "High risk of caries due to extensive tooth coverage", "They are too flexible", "They are cheap"], a: 1, exp: "They cover a large area of the tooth, trapping plaque."},
+            {q: "'Bracing' is stronger in which clasp type?", options: ["Gingivally approaching (Bar) clasps", "Occlusally approaching (Circumferential) clasps", "Ring clasps", "Wrought wire"], a: 1, exp: "The rigid body of the circumferential clasp resists lateral movement better."},
+            {q: "The 'Half and Half' clasp has:", options: ["One arm", "Two separate minor connectors and occlusal rests", "Plastic and metal", "No rests"], a: 1, exp: "It's a complex design used to 'split' the stresses."},
+            {q: "Indirect retainers are NOT needed in:", options: ["Class I", "Class II", "Class III (Tooth-supported)", "Class IV (Long span)"], a: 2, exp: "There is no axis of rotation (fulcrum line) in a tooth-borne case."},
+            {q: "What happens if a distal rest is used in a free-end saddle instead of a mesial rest?", options: ["Nothing", "It creates a damaging 'class I lever' that pumps the tooth out of its socket", "It improves retention", "It helps bone growth"], a: 1, exp: "This is why RPI uses a Mesial rest—to create a safer lever action."},
+            {q: "The 'Proximal Plate' in RPI provides:", options: ["Retention", "Bracing, reciprocation, and stabilization", "Support only", "Esthetics only"], a: 1, exp: "It is a flat metal part that guides the denture and resists lateral movement."},
+            {q: "'Caries Susceptibility' is higher with:", options: ["I-Bar", "Aker’s clasp", "Wrought wire", "Ceramic crowns"], a: 1, exp: "Aker's covers more tooth structure, making cleaning harder."},
+            {q: "Which is the 'Best Indirect Retainer'?", options: ["A clasp on a lateral incisor", "A properly prepared occlusal rest far from the fulcrum line", "The lingual bar", "The artificial teeth"], a: 1, exp: "Rigid rests provide the most positive resistance to rotation."},
+            {q: "'Tripping Action' occurs when the clasp tip:", options: ["Breaks", "Is pushed INTO the undercut by dislodging forces", "Is pulled OUT of the undercut", "Falls off"], a: 1, exp: "The tip 'digs in,' making it harder for the denture to move."},
+            {q: "'Y-bar' clasps are characterized by:", options: ["A single arm", "Retentive arms being close together like a 'Y'", "Approaching from the palate", "Being made of yellow gold"], a: 1, exp: "A variation of the Roach bar clasp."},
+            {q: "What determines the 'Effectiveness' of an indirect retainer?", options: ["The color", "Distance from the fulcrum line and rigidity of the connector", "The patient's saliva", "The number of teeth"], a: 1, exp: "A long, rigid arm works like a better 'seesaw' to stop movement."},
+            {q: "An 'L-bar' is disadvantaged by:", options: ["Being too pretty", "Blocking the 'self-cleansing' action of the tooth", "Being too thin", "Too much retention"], a: 1, exp: "Its shape traps food and plaque near the gingiva."},
+            {q: "In RPI, during function, the I-bar moves:", options: ["Toward the tooth", "Away from the tooth surface (disengages)", "Upwards", "Into the bone"], a: 1, exp: "This is a 'stress-releasing' design to protect the abutment."},
+            {q: "Professional Tip: 'Patient Tolerance' is usually better for:", options: ["Bar clasps", "Aker’s clasps (Occlusal approach)", "Ring clasps", "Attachments"], a: 1, exp: "Bar clasps in the vestibule can irritate the cheeks and lips."},
+
+            // Chapter 6
+            {q: "The primary requirement of any Major Connector is:", options: ["Flexibility", "Rigidity", "Esthetics", "Light weight"], a: 1, exp: "It must connect both sides firmly to distribute forces equally (Cross-arch stabilization)."},
+            {q: "What is the consequence of a 'Flexible' major connector?", options: ["It is more comfortable", "It causes localized bone resorption and 'pumping' of abutment teeth", "It improves retention", "It is cheaper to make"], a: 1, exp: "It fails to distribute stress, damaging the tissues it's supposed to protect."},
+            {q: "In the 'Maxilla,' the border of the connector should be ____ mm away from the gingival margin.", options: ["3 mm", "4 mm", "6 mm", "10 mm"], a: 2, exp: "To avoid gingival impingement and inflammation."},
+            {q: "In the 'Mandible,' the upper border of the Lingual Bar should be at least ____ mm away from the gingiva.", options: ["2 mm", "4 mm", "6 mm", "1 mm"], a: 1, exp: "The mandibular space is more limited; 4mm is the standard 'safe' zone."},
+            {q: "Which connector is shaped like a 'Half-pear' (thin at the top, thick at the bottom)?", options: ["Palatal strap", "Lingual bar", "Labial bar", "Palatal bar"], a: 1, exp: "This shape provides strength without being bulky to the tongue."},
+            {q: "'Beading' of the maxillary cast is performed to:", options: ["Make it look nice", "Ensure a positive contact and prevent food trapping under the connector", "Increase the weight", "Mark the teeth for extraction"], a: 1, exp: "It creates a seal between the metal and the palate."},
+            {q: "Beading is CONTRAINDICATED (never done) in:", options: ["The Maxilla", "The Mandible", "Tooth-supported cases", "Gold dentures"], a: 1, exp: "Mandibular tissue is too thin and non-displaceable; beading would cause painful ulcers."},
+            {q: "Which Maxillary connector is the 'Least Desirable' and should be avoided?", options: ["Full palatal plate", "Middle palatal strap", "U-shaped (Horse-shoe) connector", "Anterior-posterior palatal strap"], a: 2, exp: "It lacks rigidity and can cause damaging torque on the teeth."},
+            {q: "A 'Lingual Plate' (Apron) is indicated when:", options: ["There is plenty of space", "There is a high lingual frenum or shallow floor of the mouth (<7mm)", "The patient has no tongue", "To replace only one tooth"], a: 1, exp: "It covers the teeth to provide strength where a bar cannot fit."},
+            {q: "'Double Palatal Connector' (Ring design) is very rigid because:", options: ["It is very thick", "The metal is located in two different planes (L-beam effect)", "It is made of titanium", "It covers the throat"], a: 1, exp: "This geometry resists bending in all directions."},
+            {q: "The 'Labial Bar' is used specifically when:", options: ["The patient wants to show off the metal", "There is severe lingual inclination of the lower teeth or large lingual tori", "To replace front teeth", "It is cheaper"], a: 1, exp: "It is a 'last resort' when the lingual side cannot be used."},
+            {q: "How deep should the 'Bead' groove be on the master cast?", options: ["0.5 mm", "2.0 mm", "5.0 mm", "1 inch"], a: 0, exp: "A shallow groove is enough to create a seal without hurting the patient."},
+            {q: "'Full Palatal Plate' is the best choice when:", options: ["Only 1 tooth is missing", "5 or fewer teeth remain (few abutments)", "The patient is young", "To save money"], a: 1, exp: "It provides maximum support from the entire hard palate."},
+            {q: "Mandibular major connectors MUST have 'Relief' underneath because:", options: ["To make them lighter", "The underlying mucosa is thin, sensitive, and non-displaceable", "To hide the metal", "To trap food"], a: 1, exp: "Direct contact would cause painful pressure spots on the bone."},
+            {q: "Which is the 'Most Commonly Used' maxillary connector due to comfort and rigidity?", options: ["Palatal bar", "Middle palatal strap", "Horse-shoe", "Labial bar"], a: 1, exp: "It is well-tolerated by the tongue and structurally sound."},
+            {q: "A 'Cingulum Bar' (Dental bar) is used when:", options: ["Long clinical crowns are present and there's no room for a lingual bar", "Teeth are missing", "For esthetics", "In the maxilla only"], a: 0, exp: "It sits on the 'teeth' rather than the 'gums'."},
+            {q: "'Relief' is NOT required for maxillary major connectors EXCEPT when:", options: ["There is a hard midline suture or palatal torus", "Every case", "Never", "For young patients"], a: 0, exp: "Hard bony bumps need relief to prevent the denture from 'rocking'."},
+            {q: "The borders of a maxillary major connector should be placed:", options: ["On the crests of the rugae", "In the valleys (depressions) between the rugae", "On the incisors", "In the throat"], a: 1, exp: "Placing them in the 'valleys' makes them less noticeable to the tongue."},
+            {q: "'Double Lingual Bar' (Kennedy Bar) consists of:", options: ["Two bars on the lip side", "A primary lingual bar and a secondary bar on the cingula", "Acrylic and metal", "Two plates"], a: 1, exp: "It provides indirect retention and stabilization without covering the gingiva."},
+            {q: "Why should borders be 'Tapered' (thinned at the edges)?", options: ["To save metal", "To make the transition between metal and tissue undetectable to the tongue", "To make them sharp", "For easier casting"], a: 1, exp: "Thick edges are very annoying and can cause speech problems."},
+            {q: "Which Mandibular connector covers the most tissue?", options: ["Lingual bar", "Sublingual bar", "Lingual plate", "Labial bar"], a: 2, exp: "The plate covers everything from the floor of the mouth up to the teeth."},
+            {q: "A 'Palatal Bar' is usually contraindicated because it is:", options: ["Too wide", "Too flexible (due to its narrow width)", "Too cheap", "Invisible"], a: 1, exp: "Being narrow, it must be very thick to be rigid, which the tongue hates."},
+            {q: "'Sublingual Bar' is basically a lingual bar that is:", options: ["Vertical", "Horizontal (turned on its side)", "Blue", "Made of plastic"], a: 1, exp: "It fits 'under' the tongue to save space."},
+            {q: "What is the total minimum space required for a 'Lingual Bar'?", options: ["3 mm", "7 mm (3mm below gingiva + 3mm width + 1mm above floor)", "20 mm", "1 mm"], a: 1, exp: "Less than 7-8mm of space means you MUST use a Lingual Plate."},
+            {q: "Which connector is most likely to affect 'Taste'?", options: ["Lingual bar", "Full palatal plate", "Palatal strap", "Labial bar"], a: 1, exp: "It covers the taste receptors on the hard palate."},
+            {q: "'Combination Chrome/Acrylic' major connectors are used when:", options: ["The patient likes plastic", "Constant 'Relining' is expected due to bone resorption", "For esthetics only", "They are the strongest"], a: 1, exp: "You can't reline metal, but you can reline the acrylic part."},
+            {q: "Which alloy requires a 'Double Thickness' (0.8mm) for rigidity?", options: ["Chrome-Cobalt", "Gold alloy", "Titanium", "Steel"], a: 1, exp: "Gold is more flexible, so more bulk is needed to prevent bending."},
+            {q: "'Rugae' areas are important because the major connector should:", options: ["Cover them completely", "End in the valleys and avoid pressure on the crests", "Be made of rugae-colored metal", "Be removed from rugae"], a: 1, exp: "Pressure on rugae is uncomfortable and can cause tissue changes."},
+            {q: "'AH-line' (Vibrating line) marks the posterior limit for:", options: ["Lingual bar", "Full palatal plate", "All RPDs", "Only front teeth"], a: 1, exp: "The plate must not go onto the soft palate or it will lose suction and cause gagging."},
+            {q: "Professional Tip: 'Major Connector' connects:", options: ["Teeth to teeth", "One side of the arch to the opposite side", "The metal to the plastic", "The patient to the dentist"], a: 1, exp: "The fundamental definition of a major connector."},
+
+            // Chapter 7
+            {q: "The primary function of a 'Minor Connector' is:", options: ["To provide retention", "To connect all components (clasps, rests) to the major connector", "To replace missing teeth", "To clean the mouth"], a: 1, exp: "It's the 'link' that holds everything together."},
+            {q: "Minor connectors also help in 'Bracing' by:", options: ["Being very flexible", "Contacting vertical guide planes on the abutment teeth", "Engaging undercuts", "Falling out"], a: 1, exp: "They resist lateral/horizontal movement of the denture."},
+            {q: "A 'Lattice' type minor connector provides:", options: ["The best mechanical retention for the acrylic resin denture base", "The best esthetics", "Direct tooth support", "Suction"], a: 0, exp: "The large holes allow acrylic to wrap around and lock the metal."},
+            {q: "'Denture Base' (Saddle) is the part that:", options: ["Hooks the teeth", "Rests on the oral mucosa and carries artificial teeth", "Connects the two sides", "Replaces the tongue"], a: 1, exp: "It is the foundation that replaces the gums and holds the teeth."},
+            {q: "'Support' for the denture base comes from:", options: ["Rests only", "The residual ridge (extension base) or abutment teeth (tooth-supported)", "Gravity only", "The saliva"], a: 1, exp: "Depending on the class, support is shared between bone and teeth."},
+            {q: "'Acrylic Resin' is the material of choice for 'Extension Bases' because:", options: ["It is the strongest", "It is easily 'Relined' as the ridge resorbs over time", "It conducts heat well", "It is very thin"], a: 1, exp: "Free-end saddles always cause bone loss; relining fixes the fit."},
+            {q: "What is a major ADVANTAGE of 'Metallic Denture Bases'?", options: ["Easy to reline", "High thermal conductivity (patient feels the food's heat)", "Lightweight", "Very thick"], a: 1, exp: "Feeling heat is natural and healthy for the underlying tissues."},
+            {q: "A 'Relief' is placed under the denture base framework to:", options: ["Make it heavier", "Provide space for the acrylic resin that will be added later", "Save money", "Clean the cast"], a: 1, exp: "The metal must not touch the bone; the 'sandwich' of acrylic goes in between."},
+            {q: "'Porcelain Teeth' are known for having:", options: ["Low abrasion resistance", "High wear resistance but are brittle and prone to fracture", "Good chemical bond to acrylic", "High resilience"], a: 1, exp: "They last forever but can snap if the patient drops the denture."},
+            {q: "'Acrylic (Resin) Teeth' are preferred for RPD because:", options: ["They are very heavy", "They bond chemically to the base and are easy to modify for tight spaces", "They never wear down", "They make a clicking sound"], a: 1, exp: "They are tough and easier for the technician to 'grind' into position."},
+            {q: "'Finish Line' (External/Internal) is the point where:", options: ["The denture ends", "The metal framework meets the acrylic resin base", "The teeth are set", "The patient pays"], a: 1, exp: "It must be a sharp 'butt joint' to prevent the acrylic from cracking."},
+            {q: "Which material is the 'Lighter' choice for Maxillary dentures?", options: ["Gold alloy", "Acrylic resin", "Chrome-Cobalt", "Porcelain"], a: 1, exp: "Resin is much less dense than metal, making the denture more stable."},
+            {q: "'Thermal conductivity' is POOR in which material?", options: ["Chrome-Cobalt", "Acrylic resin", "Gold", "Titanium"], a: 1, exp: "Plastic acts as an insulator; patients cannot feel hot tea well."},
+            {q: "'Relining' should be done when:", options: ["The teeth change color", "The denture base no longer fits intimately with the ridge (tissue changes)", "The metal framework breaks", "Every 2 weeks"], a: 1, exp: "It restores the fit and support of the extension base."},
+            {q: "'Composite / Isosite' teeth are a modern choice because they:", options: ["Are made of metal", "Have wear resistance similar to enamel and excellent color stability", "Are very soft", "Are only for front teeth"], a: 1, exp: "They combine the best properties of porcelain and acrylic."},
+            {q: "'Meshwork' type minor connectors have:", options: ["Large square holes", "Small, fine holes", "No holes", "Only one hole"], a: 1, exp: "Used for smaller spaces where strength is needed."},
+            {q: "'Tissue Stoppers' are mandatory to:", options: ["Stop bleeding", "Stabilize the metal framework on the cast during acrylic processing", "Replace molars", "Measure saliva"], a: 1, exp: "They prevent the framework from shifting when the plastic is packed."},
+            {q: "'Metallic Teeth' are indicated when:", options: ["Esthetics is priority", "There is EXTREMELY limited inter-arch space (VDO is short)", "The patient is a robot", "To reduce cost"], a: 1, exp: "Metal is strong even when very thin."},
+            {q: "'Facings' are artificial teeth where:", options: ["Only the front surface is porcelain/plastic, attached to a metal back", "The tooth is made of gold", "The tooth is transparent", "For molars only"], a: 0, exp: "Used in deep bite cases for strength and esthetics."},
+            {q: "'Mechanical Retention' is needed for Porcelain teeth because:", options: ["They are too smooth", "They do not bond chemically to acrylic resin", "To make them heavier", "To hide the metal"], a: 1, exp: "They need holes (diatorics) or pins to stay in the denture."},
+            {q: "'Tube Teeth' are unique because:", options: ["They are hollow", "They are cemented over a metal post on the framework", "They are made of rubber", "For temporary use only"], a: 1, exp: "A high-quality, very esthetic option for bounded spaces."},
+            {q: "Why is 'Chrome-Cobalt' the standard alloy for frameworks?", options: ["It is cheap and very rigid", "It is soft like lead", "It is gold in color", "It melts at 100°C"], a: 0, exp: "Its rigidity allows for thin, strong connectors."},
+            {q: "'Reciprocation' by minor connectors prevents:", options: ["Tooth decay", "The abutment tooth from moving when the clasp is inserted", "Allergic reactions", "Breaking the metal"], a: 1, exp: "It 'holds' the tooth so the clasp tip can flex over it."},
+            {q: "'Minor Connectors' should be located in the:", options: ["Middle of the palate", "Embrasure areas between teeth", "Cheeks", "Throat"], a: 1, exp: "This is the least bothersome position for the tongue."},
+            {q: "What is a 'RAP' (Reinforced Acrylic Pontic)?", options: ["A very fast tooth", "An acrylic tooth reinforced with a metal or fiber frame", "A type of clasp", "A dental drill"], a: 1, exp: "It provides extra strength for single teeth prone to breaking."},
+            {q: "'Titanium' is used for bases because it is:", options: ["The heaviest metal", "Extremely biocompatible and highly corrosion-resistant", "Bright red", "Low cost"], a: 1, exp: "It is the 'gold standard' for compatibility with oral tissues."},
+            {q: "Which teeth produce a 'Clicking' sound during mastication?", options: ["Acrylic", "Porcelain", "Composite", "Metallic"], a: 1, exp: "Ceramic hitting ceramic makes a distinct sound."},
+            {q: "'Relining' an RPD is usually required every:", options: ["2 months", "2-5 years (depending on ridge resorption rate)", "Never", "Daily"], a: 1, exp: "As bone shrinks, the gap must be filled to maintain support."},
+            {q: "'Internal Finish Line' is found on which side of the metal?", options: ["The outer side (visible)", "The tissue side (underneath)", "On the clasp tip", "In the artificial tooth"], a: 1, exp: "It creates a clean border for the acrylic against the gums."},
+            {q: "Professional Tip: 'Resilience' (Shock absorption) is HIGHER in:", options: ["Porcelain teeth", "Acrylic resin teeth", "Gold teeth", "Chrome-Cobalt"], a: 1, exp: "Plastic absorbs bite forces better, protecting the underlying bone."},
+
+            // Chapter 8
+            {q: "According to the image, which part is labeled number '4'?", options: ["Cast Holder", "Analyzing Rod (Vertical Rod)", "Adjusting Screw", "Base"], a: 1, exp: "The vertical spindle used to check parallelism and path of insertion."},
+            {q: "What is the function of the 'Carbon Marker' (Attachment #2)?", options: ["Measuring undercuts", "Marking the survey line and height of contour on the tooth", "Carving wax", "Polishing metal"], a: 1, exp: "It leaves a physical line on the cast at the widest part of the tooth."},
+            {q: "Which tool is used to 'Measure undercut depth' (Attachment #3)?", options: ["Analyzing Rod", "Undercut Gauges (e.g., 0.01\", 0.02\")", "Wax Knife", "Screwdriver"], a: 1, exp: "Gauges determine exactly how far a clasp tip can go into an undercut."},
+            {q: "The 'Cast Holder / Survey Table' (labeled #1) is used to:", options: ["Melt the metal", "Hold and tilt the cast to find the best path of insertion", "Measure the bite", "Clean the cast"], a: 1, exp: "Its ball-joint allows tilting the model in 3D space."},
+            {q: "What is the 'Survey Line' defined as in the image?", options: ["The gum line", "Line of maximum convexity of the tooth", "The path of the needle", "A line on the palate"], a: 1, exp: "It is the 'equator' of the tooth determined by the surveyor."},
+            {q: "'Block-out' procedures are helped by which surveyor tool (Attachment #4)?", options: ["Analyzing Rod", "Carbon Marker", "Wax Knife", "Undercut Gauge"], a: 2, exp: "Used to scrape away excess wax in areas that should not have undercuts."},
+            {q: "What is the 'Path of Insertion'?", options: ["The way the patient eats", "The direction in which the RPD is placed or removed from the teeth", "The shape of the bone", "The speed of casting"], a: 1, exp: "Determined by the surveyor to ensure the denture fits easily."},
+            {q: "'Agar-Agar' is heated to ____ and cooled to ____ for duplication.", options: ["100°C / 20°C", "95°C / 65°C", "50°C / 10°C", "200°C / 100°C"], a: 1, exp: "Precision temperatures are critical for a perfect copy of the cast."},
+            {q: "What is the 'Refractory Cast'?", options: ["The master cast", "A copy made of heat-resistant (silica-based) material used for casting", "A broken cast", "A wax model"], a: 1, exp: "It survives the high temperatures of the burnout furnace."},
+            {q: "'Shrinkage' in Agar-Agar occurs toward the part that:", options: ["Stays hot", "Cools first", "Is made of stone", "Is white"], a: 1, exp: "This is why the flask must be cooled from the bottom first (Ice water trick)."},
+            {q: "The 'Burnout Furnace' reaches temperatures up to:", options: ["100°C", "1200°C", "500°C", "10,000°C"], a: 1, exp: "To evaporate all wax and prepare the mold for molten metal."},
+            {q: "'Induction Heating' uses ____ to melt the metal.", options: ["A gas torch", "A magnetic field (Safer and more efficient)", "Sunlight", "Hot water"], a: 1, exp: "Modern technology for precise and clean melting of alloys."},
+            {q: "'Centrifugal Force Casting' machine rotates at:", options: ["10 RPM", "3000 RPM", "100,000 RPM", "It doesn't rotate"], a: 1, exp: "High speed 'slings' the liquid metal into the mold's tiny spaces."},
+            {q: "The 'Sprue' must be ____ than the thickest part of the denture.", options: ["Thinner", "Thicker (to prevent shrinkage defects)", "Same size", "Shorter"], a: 1, exp: "It keeps a reservoir of molten metal to 'feed' the casting as it cools."},
+            {q: "'Sandblasting' is used to:", options: ["Polish the teeth", "Clean the framework from investment material and oxides", "Sharpen the clasps", "Change the color"], a: 1, exp: "High-pressure sand removes the 'hard crust' of the investment."},
+            {q: "'Quenching' (putting a hot ring in water) can lead to:", options: ["Better fit", "Poor fit and changes in metal properties", "Faster delivery", "Shiny metal"], a: 1, exp: "Rapid cooling can distort the framework or make the metal brittle."},
+            {q: "'Indicating Media' (e.g., Silicone or Rouge) is used to:", options: ["Paint the denture", "Identify pressure spots when fitting the framework in the mouth", "Choose tooth shade", "Stick the teeth on"], a: 1, exp: "Shows exactly where the metal is rubbing or 'too tight'."},
+            {q: "'High Speed Grinding' involves speeds up to:", options: ["100 RPM", "45,000 RPM", "1 million RPM", "It is done by hand only"], a: 1, exp: "To remove excess metal and 'sprues' quickly."},
+            {q: "'Surface Hardening' of the refractory cast is done at ____ for 1 hour.", options: ["50°C", "200°C (dipped in wax/alcohol solution)", "1000°C", "Room temp"], a: 1, exp: "To prevent the surface from scratching during waxing."},
+            {q: "What is the 'Adjusting Screw' (labeled #5) function?", options: ["To move the table", "To lock the analyzing rod in a specific vertical position", "To measure the tooth", "To turn off the machine"], a: 1, exp: "Vital for maintaining the set path of insertion during analysis."},
+            {q: "'Digital Technology' in RPD allows for:", options: ["3D printing of the wax pattern or framework", "Better precision and faster workflow", "Both A and B", "None of the above"], a: 2, exp: "CAD/CAM is the future of accurate framework construction."},
+            {q: "'Relief Waxing' under the saddle is done to:", options: ["Make it look smooth", "Create space for the acrylic resin later", "Increase the gold content", "Mark the teeth"], a: 1, exp: "Vital step to allow the 'base' material to fit under the metal mesh."},
+            {q: "'Master Cast' is made of ____, while 'Refractory Cast' is made of ____.", options: ["Wax / Metal", "Dental Stone / Silica-based material", "Plastic / Rubber", "Sand / Glue"], a: 1, exp: "Materials chosen for durability vs. heat resistance."},
+            {q: "'Air Vents' are added to the mold to:", options: ["Let the mold breathe", "Allow air to escape so metal can fill the mold without back-pressure", "Cool the metal", "For decoration"], a: 1, exp: "Prevents 'voids' or holes in the final casting."},
+            {q: "The difference between molten metal and ring temp should NOT exceed:", options: ["10°C", "100°C (to prevent metal freezing too fast)", "500°C", "1000°C"], a: 1, exp: "Critical for a smooth, complete casting."},
+            {q: "'Surfactant' (Debubblizer) is used to:", options: ["Clean the lab", "Reduce surface tension so investment flows smoothly without bubbles", "Melt the wax", "Glue the teeth"], a: 1, exp: "Essential for a cast with no 'metal beads' or defects."},
+            {q: "Which part provides 'Stability' to the whole surveyor?", options: ["Horizontal arm", "Base", "Carbon marker", "Cast"], a: 1, exp: "A heavy, flat base is required for accurate surveying."},
+            {q: "'Analyzing Rod' is used BEFORE the carbon marker to:", options: ["Clean the tooth", "Check for parallelism and the best possible tilt", "Mark the line", "Carve wax"], a: 1, exp: "It's the diagnostic tool used to 'plan' the survey."},
+            {q: "Why is the 'Refractory Cast' NOT placed on the surveyor?", options: ["It is too heavy", "Its surface is too weak and would be damaged by the tools", "It's illegal", "It's not necessary"], a: 1, exp: "The silica material is fragile; all surveying must be finished on the master cast first."},
+            {q: "Professional Tip: The 'Surveyor' is essential because it controls:", options: ["Design accuracy, retention, and insertion path", "The patient's pain", "The speed of the dentist", "The color of the denture"], a: 0, exp: "It is the mechanical guide that ensures the RPD actually works."}
+        ];
+
+        // --- APP LOGIC ---
+
+        const app = {
+            currentChapter: null,
+            currentQuestionIndex: 0,
+            score: 0,
+            userAnswers: [],
+            
+            // DOM Elements
+            elements: {
+                homeView: document.getElementById('homeView'),
+                quizView: document.getElementById('quizView'),
+                resultView: document.getElementById('resultView'),
+                chapterList: document.getElementById('chapterList'),
+                questionText: document.getElementById('questionText'),
+                optionsList: document.getElementById('optionsList'),
+                progressTracker: document.getElementById('progressTracker'),
+                feedbackArea: document.getElementById('feedbackArea'),
+                feedbackTitle: document.getElementById('feedbackTitle'),
+                explanationText: document.getElementById('explanationText'),
+                nextBtn: document.getElementById('nextBtn'),
+                finalScore: document.getElementById('finalScore'),
+                scoreCircle: document.getElementById('scoreCircle'),
+                resultMsg: document.getElementById('resultMessage'),
+                resultDetails: document.getElementById('resultDetails'),
+                homeBtn: document.getElementById('homeBtn')
+            },
+
+            init() {
+                this.renderChapterList();
+                this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
+            },
+
+            renderChapterList() {
+                this.elements.chapterList.innerHTML = '';
+                const totalQuestions = questionsData.length;
+                const questionsPerChapter = 30;
+                const totalChapters = 8;
+
+                for (let i = 1; i <= totalChapters; i++) {
+                    const start = (i - 1) * questionsPerChapter;
+                    const end = start + questionsPerChapter;
+                    const progress = this.getChapterProgress(i);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'chapter-card';
+                    card.onclick = () => this.startChapter(i);
+                    
+                    let statusHtml = '';
+                    if (progress.completed) {
+                        statusHtml = `<span class="status-badge completed">Completed</span>`;
+                    } else if (progress.lastIndex > 0) {
+                        statusHtml = `<span class="status-badge">In Progress</span>`;
+                    }
+
+                    card.innerHTML = `
+                        ${statusHtml}
+                        <h3>Chapter ${i}</h3>
+                        <p>Questions ${start + 1} - ${end}</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${progress.percent}%"></div>
+                        </div>
+                    `;
+                    this.elements.chapterList.appendChild(card);
+                }
+            },
+
+            getChapterProgress(chapterNum) {
+                const saved = localStorage.getItem(`rpdboss_chapter${chapterNum}`);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    const percent = (data.lastIndex / 30) * 100;
+                    return { lastIndex: data.lastIndex, completed: data.completed, percent: percent };
+                }
+                return { lastIndex: 0, completed: false, percent: 0 };
+            },
+
+            startChapter(chapterNum) {
+                this.currentChapter = chapterNum;
+                const progress = this.getChapterProgress(chapterNum);
+                
+                if (progress.completed) {
+                    // Ask to restart or just view results? Let's restart for practice.
+                    if(!confirm("Chapter completed. Retake?")) return;
+                    this.resetChapterState();
+                } else {
+                    this.currentQuestionIndex = progress.lastIndex;
+                    // Load previous answers if needed (simplified here: just resuming index)
+                    // In a fuller app, we'd load the score so far. 
+                    // For this design, we resume question index but reset current session score.
+                    this.score = 0; 
+                    this.userAnswers = new Array(30).fill(null);
+                }
+
+                this.switchView('quiz');
+                this.elements.homeBtn.style.display = 'block';
+                this.renderQuestion();
+            },
+
+            resetChapterState() {
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.userAnswers = new Array(30).fill(null);
+                localStorage.removeItem(`rpdboss_chapter${this.currentChapter}`);
+            },
+
+            renderQuestion() {
+                const qIndex = (this.currentChapter - 1) * 30 + this.currentQuestionIndex;
+                const qData = questionsData[qIndex];
+
+                // Update Progress
+                this.elements.progressTracker.textContent = `Question ${this.currentQuestionIndex + 1}/30`;
+
+                // Render Text
+                this.elements.questionText.textContent = qData.q;
+
+                // Render Options
+                this.elements.optionsList.innerHTML = '';
+                qData.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.onclick = () => this.handleAnswer(idx, btn);
+                    this.elements.optionsList.appendChild(btn);
+                });
+
+                // Reset Feedback
+                this.elements.feedbackArea.className = 'feedback-area';
+                this.elements.nextBtn.style.display = 'none';
+            },
+
+            handleAnswer(selectedIndex, btnElement) {
+                // Disable all buttons
+                const buttons = this.elements.optionsList.querySelectorAll('.option-btn');
+                buttons.forEach(b => b.disabled = true);
+
+                const qIndexGlobal = (this.currentChapter - 1) * 30 + this.currentQuestionIndex;
+                const correctIndex = questionsData[qIndexGlobal].a;
+                const isCorrect = selectedIndex === correctIndex;
+
+                if (isCorrect) {
+                    btnElement.classList.add('correct');
+                    this.score++;
+                    this.showFeedback(true, "Correct! " + (this.currentQuestionIndex === 29 ? "Perfect finish!" : "Great job!"), questionsData[qIndexGlobal].exp);
+                } else {
+                    btnElement.classList.add('wrong');
+                    // Highlight correct one
+                    buttons[correctIndex].classList.add('correct');
+                    this.showFeedback(false, "Incorrect", questionsData[qIndexGlobal].exp);
+                }
+
+                this.userAnswers[this.currentQuestionIndex] = selectedIndex;
+                this.saveProgress();
+                this.elements.nextBtn.style.display = 'inline-block';
+            },
+
+            showFeedback(isCorrect, title, explanation) {
+                const area = this.elements.feedbackArea;
+                const titleEl = this.elements.feedbackTitle;
+                const textEl = this.elements.explanationText;
+
+                area.className = `feedback-area show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+                
+                // Icon
+                const icon = isCorrect ? '✅' : '🛑'; // Hand/Stop icon for wrong as requested
+                titleEl.innerHTML = `<span>${icon}</span> ${title}`;
+                textEl.textContent = explanation;
+            },
+
+            nextQuestion() {
+                this.currentQuestionIndex++;
+                if (this.currentQuestionIndex >= 30) {
+                    this.finishChapter();
+                } else {
+                    this.renderQuestion();
+                }
+            },
+
+            saveProgress() {
+                const data = {
+                    lastIndex: this.currentQuestionIndex + (this.elements.nextBtn.style.display === 'inline-block' ? 1 : 0),
+                    completed: false,
+                    score: this.score // Saving current score in case of crash (optional)
+                };
+                localStorage.setItem(`rpdboss_chapter${this.currentChapter}`, JSON.stringify(data));
+            },
+
+            finishChapter() {
+                // Mark as complete
+                const data = { lastIndex: 30, completed: true, score: this.score };
+                localStorage.setItem(`rpdboss_chapter${this.currentChapter}`, JSON.stringify(data));
+                
+                this.showResults();
+            },
+
+            showResults() {
+                this.switchView('result');
+                this.elements.homeBtn.style.display = 'none';
+
+                const percent = Math.round((this.score / 30) * 100);
+                this.elements.finalScore.textContent = `${percent}%`;
+                
+                // Animate circle
+                this.elements.scoreCircle.style.background = `conic-gradient(var(--primary-orange) ${percent}%, #eee ${percent}%)`;
+
+                this.elements.resultDetails.textContent = `You answered ${this.score} out of 30 questions correctly.`;
+
+                if (percent >= 80) {
+                    this.elements.resultMsg.textContent = "Excellent Work, Boss!";
+                    this.elements.resultMsg.style.color = "var(--success-green)";
+                } else if (percent >= 50) {
+                    this.elements.resultMsg.textContent = "Good Job!";
+                    this.elements.resultMsg.style.color = "var(--primary-orange)";
+                } else {
+                    this.elements.resultMsg.textContent = "Keep Practicing!";
+                    this.elements.resultMsg.style.color = "var(--error-red)";
+                }
+            },
+
+            retryChapter() {
+                this.resetChapterState();
+                this.startChapter(this.currentChapter);
+            },
+
+            goHome() {
+                this.switchView('home');
+                this.elements.homeBtn.style.display = 'none';
+                this.renderChapterList();
+            },
+
+            switchView(viewName) {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                if (viewName === 'home') this.elements.homeView.classList.add('active');
+                if (viewName === 'quiz') this.elements.quizView.classList.add('active');
+                if (viewName === 'result') this.elements.resultView.classList.add('active');
+                window.scrollTo(0,0);
+            }
+        };
+
+        // Initialize App
+        app.init();
+
+    </script>
+</body>
+</html>
